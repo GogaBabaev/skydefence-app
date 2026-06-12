@@ -35,11 +35,17 @@ export class OrdersController {
   }
 
   @Get(':id')
-  byId(
+  async byId(
     @TelegramUser() user: TelegramInitUser,
     @Param('id', ParseUUIDPipe) id: string,
   ) {
-    return this.orders.findOwned(id, user.id);
+    const order = await this.orders.findOwned(id, user.id);
+    // Fallback to webhooks: actively verify pending payments via YooKassa API
+    if (order.status === 'AWAITING_PAYMENT') {
+      await this.payments.reconcileOrder(id);
+      return this.orders.findOwned(id, user.id);
+    }
+    return order;
   }
 
   /** Step 3 of the flow: create a YooKassa payment for an order. */

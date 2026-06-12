@@ -119,6 +119,34 @@ export class PaymentsService {
   }
 
   /**
+   * reconcileOrder(): active fallback to webhooks. If the order still
+   * waits for payment, re-checks the latest payment against the
+   * YooKassa API and applies the verified state. Makes the flow work
+   * even when webhooks can't reach the backend (local dev, outages).
+   */
+  async reconcileOrder(orderId: string): Promise<void> {
+    const payment = await this.prisma.payment.findFirst({
+      where: {
+        orderId,
+        externalId: { not: null },
+        status: {
+          in: [PaymentStatus.PENDING, PaymentStatus.WAITING_FOR_CAPTURE],
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+    if (!payment?.externalId) return;
+    try {
+      const verified = await this.verifyPayment(payment.externalId);
+      await this.applyVerifiedPayment(verified);
+    } catch (e) {
+      this.logger.warn(
+        `reconcileOrder(${orderId}) failed: ${e instanceof Error ? e.message : e}`,
+      );
+    }
+  }
+
+  /**
    * verifyPayment(): NEVER trusts webhook payloads.
    * Re-fetches the payment from the YooKassa API by id and returns
    * the authoritative state.
