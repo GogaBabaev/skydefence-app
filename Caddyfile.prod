@@ -1,0 +1,21 @@
+# Replace app.example.com with your domain (DNS A-record → server IP).
+# Caddy obtains and renews Let's Encrypt TLS certificates automatically.
+app.example.com {
+	encode gzip zstd
+
+	# API → NestJS
+	handle /api/* {
+		reverse_proxy api:3000
+	}
+
+	# Mini App static files
+	handle {
+		reverse_proxy web:80
+	}
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+	}
+}

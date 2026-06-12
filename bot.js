@@ -1,8 +1,14 @@
 // SkyDefence Telegram Bot
-// Запуск: node bot.js
+// Токен берётся ТОЛЬКО из переменной окружения — никогда не храните его в коде.
+// Запуск: TELEGRAM_BOT_TOKEN=xxx APP_URL=https://app.example.com node bot.js
 
-const TOKEN = '8845684563:REDACTED';  // вставьте сюда
-const APP_URL = 'https://GogaBabaev.github.io/skydefence-app/'; // URL вашего Mini App
+const TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+const APP_URL = process.env.APP_URL ?? 'https://app.example.com/';
+
+if (!TOKEN) {
+  console.error('❌ TELEGRAM_BOT_TOKEN не задан. Получите токен у @BotFather и экспортируйте его в окружение.');
+  process.exit(1);
+}
 
 const API = `https://api.telegram.org/bot${TOKEN}`;
 
@@ -28,16 +34,11 @@ async function handleUpdate(update) {
   const text = msg.text ?? '';
 
   if (text === '/start') {
-    // Приветственное сообщение с баннером и кнопками
     await call('sendMessage', {
       chat_id: chatId,
       text:
         `👋 Здравствуйте, ${firstName}!\n\n` +
-        `Добро пожаловать в SkyDefence — военторг и экспертное снаряжение.\n\n` +
-        `🛡 Детекторы и подавители БПЛА\n` +
-        `🚁 Квадрокоптеры DJI\n` +
-        `🎽 Тактическое снаряжение\n` +
-        `⚡️ Портативные электростанции\n\n` +
+        `Добро пожаловать в SkyDefence.\n\n` +
         `Нажмите кнопку ниже, чтобы открыть каталог:\n\n` +
         `📞 +7 (495) 136-5777`,
       reply_markup: {
@@ -53,7 +54,6 @@ async function handleUpdate(update) {
     return;
   }
 
-  // Любое другое сообщение
   await call('sendMessage', {
     chat_id: chatId,
     text: 'Воспользуйтесь кнопкой ниже или введите /start',
@@ -65,9 +65,9 @@ async function handleUpdate(update) {
   });
 }
 
-// ─── Long polling (опрос Telegram каждые 2 сек) ─────────────────────────────
+// ─── Long polling ────────────────────────────────────────────────────────────
 let offset = 0;
-console.log('✅ SkyDefence бот запущен. Нажмите Ctrl+C для остановки.\n');
+console.log('✅ SkyDefence бот запущен.');
 
 async function poll() {
   try {

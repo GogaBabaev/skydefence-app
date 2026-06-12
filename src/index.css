@@ -8,10 +8,58 @@
     font-family: 'Inter', system-ui, sans-serif;
     background-color: #0f1509;
     color: #e8ead4;
+    transition: background-color 0.3s, color 0.3s;
   }
   ::-webkit-scrollbar { width: 5px; }
   ::-webkit-scrollbar-track { background: #0f1509; }
   ::-webkit-scrollbar-thumb { background: #47612e; border-radius: 3px; }
+}
+
+/* ─── Light theme overrides ─────────────────────────────────── */
+html.light body                        { background-color: #f4f5f0; color: #1a2210; }
+html.light ::-webkit-scrollbar-track  { background: #f4f5f0; }
+html.light .bg-dark                    { background-color: #f4f5f0 !important; }
+html.light .bg-dark-card               { background-color: #e8ead8 !important; }
+html.light .border-dark-border         { border-color: #c8d4b0 !important; }
+html.light .text-white                 { color: #1a2210 !important; }
+html.light .text-olive-200             { color: #2a3a1a !important; }
+html.light .text-olive-300             { color: #3a5020 !important; }
+html.light .text-olive-400             { color: #47612e !important; }
+html.light .text-olive-500             { color: #3a5020 !important; }
+html.light .text-olive-600             { color: #556b3a !important; }
+html.light .text-olive-700             { color: #7a9050 !important; }
+html.light .text-e8ead4               { color: #1a2210 !important; }
+html.light .bg-olive-500\/10          { background-color: rgba(71,97,46,0.12) !important; }
+html.light .bg-dark\/80               { background-color: rgba(244,245,240,0.85) !important; }
+html.light .section-title             { color: #1a2210 !important; }
+html.light header                     { background-color: #e8ead8 !important; border-color: #c8d4b0 !important; }
+html.light .glass-military            { background: rgba(232,234,216,0.92) !important; border-color: rgba(71,97,46,0.2) !important; }
+html.light .min-h-screen              { background-color: #f4f5f0 !important; }
+
+/* ─── Sections that must stay dark in light theme ──────────────── */
+html.light .always-dark                     { background-color: #0f1509 !important; }
+html.light .always-dark .bg-dark            { background-color: #0f1509 !important; }
+html.light .always-dark .bg-dark-card       { background-color: #161d0d !important; }
+html.light .always-dark .border-dark-border { border-color: #2a3820 !important; }
+html.light .always-dark .text-white         { color: #e8ead4 !important; }
+html.light .always-dark .text-olive-200     { color: #c8d0a0 !important; }
+html.light .always-dark .text-olive-300     { color: #a8ba7a !important; }
+html.light .always-dark .text-olive-400     { color: #8aab66 !important; }
+html.light .always-dark .text-olive-500     { color: #6a8a4a !important; }
+html.light .always-dark .text-olive-600     { color: #4a6a2a !important; }
+html.light .always-dark .text-olive-700     { color: #3a5a20 !important; }
+html.light .always-dark .bg-olive-500\/10   { background-color: rgba(71,97,46,0.10) !important; }
+html.light .always-dark .section-title      { color: #e8ead4 !important; }
+
+/* ─── Product image vignette (removes harsh white-bg edges in dark mode) ── */
+.product-img-container { position: relative; }
+html:not(.light) .product-img-container::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 45%, rgba(15, 21, 9, 0.88) 82%);
+  pointer-events: none;
+  z-index: 1;
 }
 
 @layer components {

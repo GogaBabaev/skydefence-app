@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Phone, ShoppingCart, ChevronDown, Search } from 'lucide-react';
-import { categories } from '../data/products';
+import { Menu, X, Phone, ShoppingCart, ChevronDown, Search, Sun, Moon, User } from 'lucide-react';
+import { categories } from '../../entities/product/data/catalog.static';
+import { useCart } from '../../features/cart/model/cart.store';
+import { useTheme } from '../../app/App';
 
 const navLinks = [
   { label: 'Акции',      path: '/aktsii' },
@@ -13,9 +15,11 @@ const navLinks = [
 ];
 
 export const Navbar = () => {
-  const [menuOpen, setMenuOpen]     = useState(false);
+  const [menuOpen, setMenuOpen]       = useState(false);
   const [catalogOpen, setCatalogOpen] = useState(false);
   const { pathname } = useLocation();
+  const { totalCount } = useCart();
+  const { theme, toggle } = useTheme();
 
   return (
     <>
@@ -120,16 +124,39 @@ export const Navbar = () => {
             ))}
           </nav>
 
-          {/* Cart */}
-          <button className="relative ml-2 hidden md:flex w-9 h-9 items-center justify-center rounded-lg border border-dark-border hover:border-olive-500/50 transition-colors text-olive-300">
-            <ShoppingCart size={16} />
+          {/* Theme toggle */}
+          <button onClick={toggle} className="ml-2 hidden md:flex w-9 h-9 items-center justify-center rounded-lg border border-dark-border hover:border-olive-500/50 transition-colors text-olive-400" title="Сменить тему">
+            {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
           </button>
+
+          {/* Account */}
+          <Link to="/account" className="ml-2 hidden md:flex w-9 h-9 items-center justify-center rounded-lg border border-dark-border hover:border-olive-500/50 transition-colors text-olive-300" title="Личный кабинет">
+            <User size={16} />
+          </Link>
+
+          {/* Cart */}
+          <Link to="/cart" className="relative ml-2 hidden md:flex w-9 h-9 items-center justify-center rounded-lg border border-dark-border hover:border-olive-500/50 transition-colors text-olive-300">
+            <ShoppingCart size={16} />
+            {totalCount > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-olive-500 text-white text-[9px] font-bold flex items-center justify-center">
+                {totalCount > 9 ? '9+' : totalCount}
+              </span>
+            )}
+          </Link>
 
           {/* Mobile: cart + burger */}
           <div className="flex items-center gap-2 ml-auto md:hidden">
-            <button className="relative w-9 h-9 flex items-center justify-center rounded-lg border border-dark-border text-olive-300">
-              <ShoppingCart size={16} />
+            <button onClick={toggle} className="w-9 h-9 flex items-center justify-center rounded-lg border border-dark-border text-olive-400">
+              {theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />}
             </button>
+            <Link to="/cart" className="relative w-9 h-9 flex items-center justify-center rounded-lg border border-dark-border text-olive-300">
+              <ShoppingCart size={16} />
+              {totalCount > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-olive-500 text-white text-[9px] font-bold flex items-center justify-center">
+                  {totalCount > 9 ? '9+' : totalCount}
+                </span>
+              )}
+            </Link>
             <button
               onClick={() => setMenuOpen(!menuOpen)}
               className="w-9 h-9 flex items-center justify-center rounded-lg border border-dark-border text-olive-300"
@@ -188,6 +215,13 @@ export const Navbar = () => {
                     {l.label}
                   </Link>
                 ))}
+                <Link
+                  to="/account"
+                  onClick={() => setMenuOpen(false)}
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-olive-300 hover:bg-olive-500/10 hover:text-white transition-colors"
+                >
+                  <User size={13} /> Личный кабинет
+                </Link>
               </div>
 
               <a

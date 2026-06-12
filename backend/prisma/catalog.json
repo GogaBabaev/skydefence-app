@@ -1,0 +1,1292 @@
+{
+  "categories": [
+    {
+      "slug": "detektory-bpla",
+      "label": "Детекторы БПЛА"
+    },
+    {
+      "slug": "podaviteli-bpla",
+      "label": "Подавители БПЛА"
+    },
+    {
+      "slug": "usiliteli-signala",
+      "label": "Усилители сигнала"
+    },
+    {
+      "slug": "sistemy-monitoringa-dronom",
+      "label": "Системы питания БПЛА"
+    },
+    {
+      "slug": "kvadrokoptery",
+      "label": "Квадрокоптеры"
+    },
+    {
+      "slug": "militar",
+      "label": "Тактическая одежда"
+    },
+    {
+      "slug": "elektrostantsii",
+      "label": "Портативные электростанции"
+    },
+    {
+      "slug": "sputnik",
+      "label": "Спутниковый интернет"
+    }
+  ],
+  "products": [
+    {
+      "slug": "detektor-bulat-v4",
+      "name": "Всенаправленный детектор дронов БУЛАТ V.4",
+      "categorySlug": "detektory-bpla",
+      "price": 109900,
+      "badge": "hit",
+      "inStock": true,
+      "shortDesc": "Всенаправленный пассивный детектор БПЛА с дальностью обнаружения до 3 км.",
+      "fullDesc": "БУЛАТ V.4 — профессиональный всенаправленный детектор БПЛА, способный обнаруживать квадрокоптеры и FPV-дроны на расстоянии до 3 000 метров. Пассивная система не излучает сигналов и работает незаметно. Поддерживает протоколы DJI OcuSync, Lightbridge, WiFi, RC-Link. Встроенный аккумулятор 8–12 часов автономной работы.",
+      "image": "https://skydefence.ru/wa-data/public/shop/products/11/01/111/images/460/460.750x0.png",
+      "gallery": [
+        "https://skydefence.ru/wa-data/public/shop/products/11/01/111/images/460/460.970.png",
+        "https://skydefence.ru/wa-data/public/shop/products/11/01/111/images/461/461.970.png",
+        "https://skydefence.ru/wa-data/public/shop/products/11/01/111/images/462/462.970.png",
+        "https://skydefence.ru/wa-data/public/shop/products/11/01/111/images/463/463.970.png",
+        "https://skydefence.ru/wa-data/public/shop/products/11/01/111/images/464/464.970.png"
+      ],
+      "specs": [
+        {
+          "label": "Дальность обнаружения",
+          "value": "до 3 000 м"
+        },
+        {
+          "label": "Направленность",
+          "value": "360°"
+        },
+        {
+          "label": "Диапазоны",
+          "value": "433 / 868 / 915 МГц, 2.4 / 5.8 ГГц"
+        },
+        {
+          "label": "Протоколы",
+          "value": "DJI OcuSync, Lightbridge, WiFi"
+        },
+        {
+          "label": "Автономность",
+          "value": "8–12 часов"
+        },
+        {
+          "label": "Вес",
+          "value": "1.2 кг"
+        }
+      ]
+    },
+    {
+      "slug": "detektor-kolibri",
+      "name": "Детектор БПЛА «Колибри»",
+      "categorySlug": "detektory-bpla",
+      "price": 65000,
+      "inStock": true,
+      "shortDesc": "Компактный карманный детектор дронов для охраны объектов и мероприятий.",
+      "fullDesc": "Колибри — портативный детектор БПЛА размером со смартфон. Идеален для личной охраны, VIP-мероприятий и патрулирования периметра. Вибро- и звуковое оповещение, LED-индикация направления.",
+      "image": "https://skydefence.ru/wa-data/public/shop/products/71/01/171/images/820/820.750x0.png",
+      "gallery": [
+        "https://skydefence.ru/wa-data/public/shop/products/71/01/171/images/820/820.970.png",
+        "https://skydefence.ru/wa-data/public/shop/products/71/01/171/images/821/821.970.png",
+        "https://skydefence.ru/wa-data/public/shop/products/71/01/171/images/822/822.970.png"
+      ],
+      "specs": [
+        {
+          "label": "Дальность",
+          "value": "до 2 000 м"
+        },
+        {
+          "label": "Диапазоны",
+          "value": "900 МГц, 2.4 / 5.1–5.9 ГГц"
+        },
+        {
+          "label": "Оповещение",
+          "value": "Вибро + звук"
+        },
+        {
+          "label": "Питание",
+          "value": "USB-C, 6 часов"
+        }
+      ]
+    },
+    {
+      "slug": "detektor-bulat-v3",
+      "name": "Детектор дронов БУЛАТ V.3",
+      "categorySlug": "detektory-bpla",
+      "price": 89900,
+      "inStock": true,
+      "shortDesc": "Предыдущее поколение — надёжный детектор БПЛА с дальностью до 2 км.",
+      "fullDesc": "БУЛАТ V.3 — проверенная версия всенаправленного детектора БПЛА. Поддерживает основные частотные диапазоны дронов, работает автономно до 10 часов.",
+      "image": "https://skydefence.ru/wa-data/public/shop/products/11/01/111/images/461/461.750x0.png",
+      "gallery": [
+        "https://skydefence.ru/wa-data/public/shop/products/11/01/111/images/461/461.970.png",
+        "https://skydefence.ru/wa-data/public/shop/products/11/01/111/images/462/462.970.png"
+      ],
+      "specs": [
+        {
+          "label": "Дальность",
+          "value": "до 2 000 м"
+        },
+        {
+          "label": "Диапазоны",
+          "value": "2.4 / 5.8 ГГц, 433 МГц"
+        },
+        {
+          "label": "Автономность",
+          "value": "до 10 часов"
+        },
+        {
+          "label": "Вес",
+          "value": "0.95 кг"
+        }
+      ]
+    },
+    {
+      "slug": "detektor-skydroid-s10",
+      "name": "Детектор пульта управления SKYDROID S10",
+      "categorySlug": "detektory-bpla",
+      "price": null,
+      "badge": "new",
+      "inStock": true,
+      "shortDesc": "Детектор для обнаружения сигналов пульта управления БПЛА SKYDROID на частоте 900 МГц.",
+      "fullDesc": "SKYDROID S10 — специализированный детектор для обнаружения дронов, использующих протокол SKYDROID на частоте 900 МГц. Применяется в составе систем защиты периметра.",
+      "image": "https://skydefence.ru/wa-data/public/shop/products/11/01/111/images/463/463.750x0.png",
+      "gallery": [
+        "https://skydefence.ru/wa-data/public/shop/products/11/01/111/images/463/463.970.png",
+        "https://skydefence.ru/wa-data/public/shop/products/11/01/111/images/464/464.970.png"
+      ],
+      "specs": [
+        {
+          "label": "Частота",
+          "value": "900 МГц"
+        },
+        {
+          "label": "Протокол",
+          "value": "SKYDROID"
+        },
+        {
+          "label": "Дальность",
+          "value": "до 1 500 м"
+        },
+        {
+          "label": "Питание",
+          "value": "12В / USB"
+        }
+      ]
+    },
+    {
+      "slug": "garpiya-120w",
+      "name": "Блокиратор дронов ГАРПИЯ 120W (6 каналов)",
+      "categorySlug": "podaviteli-bpla",
+      "price": null,
+      "badge": "new",
+      "inStock": true,
+      "shortDesc": "Ручной 6-канальный блокиратор БПЛА мощностью 120 Вт, дальность подавления до 2 км.",
+      "fullDesc": "ГАРПИЯ 120W — профессиональный ручной подавитель БПЛА с 6 независимыми каналами подавления. Блокирует все популярные системы управления дронами и GPS-навигацию. Встроенный аккумулятор — до 45 минут непрерывной работы.",
+      "image": "https://skydefence.ru/wa-data/public/shop/products/22/00/22/images/131/131.750x0.png",
+      "gallery": [
+        "https://skydefence.ru/wa-data/public/shop/products/22/00/22/images/131/131.970.png",
+        "https://skydefence.ru/wa-data/public/shop/products/22/00/22/images/132/132.970.png",
+        "https://skydefence.ru/wa-data/public/shop/products/22/00/22/images/133/133.970.png",
+        "https://skydefence.ru/wa-data/public/shop/products/22/00/22/images/134/134.970.png",
+        "https://skydefence.ru/wa-data/public/shop/products/22/00/22/images/135/135.970.png"
+      ],
+      "specs": [
+        {
+          "label": "Мощность",
+          "value": "120 Вт"
+        },
+        {
+          "label": "Каналы",
+          "value": "6 (GPS L1/L2, 2.4/5.8 ГГц, 433/868 МГц)"
+        },
+        {
+          "label": "Дальность",
+          "value": "до 2 000 м"
+        },
+        {
+          "label": "Автономность",
+          "value": "до 45 мин"
+        },
+        {
+          "label": "Вес",
+          "value": "12 кг (в кейсе)"
+        }
+      ]
+    },
+    {
+      "slug": "garpiya-pro-160w",
+      "name": "Блокиратор дронов ГАРПИЯ ПРО 160W (8 каналов)",
+      "categorySlug": "podaviteli-bpla",
+      "price": null,
+      "badge": "new",
+      "inStock": true,
+      "shortDesc": "Профессиональный 8-канальный блокиратор БПЛА мощностью 160 Вт — расширенное подавление.",
+      "fullDesc": "ГАРПИЯ ПРО 160W — усиленная версия с 8 независимыми каналами подавления. Блокирует DJI OcuSync 3.0, WiFi 6, FPV-каналы и GPS/ГЛОНАСС. Рекомендуется для охраны периметра объектов.",
+      "image": "https://skydefence.ru/wa-data/public/shop/products/23/00/23/images/136/136.750x0.png",
+      "gallery": [
+        "https://skydefence.ru/wa-data/public/shop/products/23/00/23/images/136/136.970.png",
+        "https://skydefence.ru/wa-data/public/shop/products/23/00/23/images/137/137.970.png",
+        "https://skydefence.ru/wa-data/public/shop/products/23/00/23/images/138/138.970.png"
+      ],
+      "specs": [
+        {
+          "label": "Мощность",
+          "value": "160 Вт"
+        },
+        {
+          "label": "Каналы",
+          "value": "8 (GPS L1/L2, ГЛОНАСС, 2.4/5.8 ГГц, 433/868/915 МГц)"
+        },
+        {
+          "label": "Дальность",
+          "value": "до 2 500 м"
+        },
+        {
+          "label": "Автономность",
+          "value": "до 40 мин"
+        },
+        {
+          "label": "Вес",
+          "value": "14 кг (в кейсе)"
+        }
+      ]
+    },
+    {
+      "slug": "grom-170w-v1",
+      "name": "Блокиратор БПЛА ГРОМ 8-каналов 170W V1",
+      "categorySlug": "podaviteli-bpla",
+      "price": null,
+      "badge": "hit",
+      "inStock": true,
+      "shortDesc": "Стационарный 8-канальный блокиратор ГРОМ 170 Вт — для защиты периметра объектов.",
+      "fullDesc": "ГРОМ 170W V1 — мощный стационарный/мобильный блокиратор БПЛА с 8 каналами подавления. Применяется для охраны стратегических объектов, КПП, складов. Всенаправленная антенная система 360°.",
+      "image": "https://skydefence.ru/wa-data/public/shop/products/24/00/24/images/139/139.750x0.png",
+      "gallery": [
+        "https://skydefence.ru/wa-data/public/shop/products/24/00/24/images/139/139.970.png",
+        "https://skydefence.ru/wa-data/public/shop/products/24/00/24/images/140/140.970.png",
+        "https://skydefence.ru/wa-data/public/shop/products/24/00/24/images/141/141.970.png"
+      ],
+      "specs": [
+        {
+          "label": "Мощность",
+          "value": "170 Вт"
+        },
+        {
+          "label": "Каналы",
+          "value": "8 (GPS/ГЛОНАСС, 2.4/5.8 ГГц, 433/868/915 МГц, FPV)"
+        },
+        {
+          "label": "Дальность",
+          "value": "до 3 000 м"
+        },
+        {
+          "label": "Покрытие",
+          "value": "360°"
+        },
+        {
+          "label": "Питание",
+          "value": "220В / 12–24В"
+        }
+      ]
+    },
+    {
+      "slug": "garpiya-170w-v3",
+      "name": "Блокиратор дронов ГАРПИЯ 8 каналов 170W V3",
+      "categorySlug": "podaviteli-bpla",
+      "price": null,
+      "inStock": true,
+      "shortDesc": "ГАРПИЯ 170W V3 — обновлённый 8-канальный блокиратор с улучшенным радиусом действия.",
+      "fullDesc": "ГАРПИЯ 8 каналов 170W V3 — третье поколение ручного блокиратора. Усиленный аккумулятор, улучшенный теплоотвод, поддержка FPV-дронов. Дальность 170W обеспечивает надёжное подавление до 2 500 м.",
+      "image": "https://skydefence.ru/wa-data/public/shop/products/26/00/26/images/190/190.750x0.jpg",
+      "gallery": [
+        "https://skydefence.ru/wa-data/public/shop/products/26/00/26/images/190/190.970.jpg",
+        "https://skydefence.ru/wa-data/public/shop/products/26/00/26/images/191/191.970.jpg"
+      ],
+      "specs": [
+        {
+          "label": "Мощность",
+          "value": "170 Вт"
+        },
+        {
+          "label": "Каналы",
+          "value": "8"
+        },
+        {
+          "label": "Дальность",
+          "value": "до 2 500 м"
+        },
+        {
+          "label": "Автономность",
+          "value": "до 50 мин"
+        },
+        {
+          "label": "Вес",
+          "value": "13 кг (в кейсе)"
+        }
+      ]
+    },
+    {
+      "slug": "ryukzak-garpiya-350w",
+      "name": "Носимый комплекс РЭБ «Рюкзак ГАРПИЯ 350W»",
+      "categorySlug": "podaviteli-bpla",
+      "price": null,
+      "badge": "new",
+      "inStock": true,
+      "shortDesc": "Рюкзачный РЭБ-комплекс 350 Вт — мобильная защита бойца или объекта на марше.",
+      "fullDesc": "Рюкзак ГАРПИЯ 350W — мощный носимый комплекс радиоэлектронной борьбы. Мощность 350 Вт, 8 каналов подавления, встроенные аккумуляторы для 90 минут непрерывной работы. Идеален для сопровождения колонн и защиты КП.",
+      "image": "https://skydefence.ru/wa-data/public/shop/products/15/01/115/images/474/474.750x0.png",
+      "gallery": [
+        "https://skydefence.ru/wa-data/public/shop/products/15/01/115/images/474/474.970.png",
+        "https://skydefence.ru/wa-data/public/shop/products/15/01/115/images/475/475.970.png"
+      ],
+      "specs": [
+        {
+          "label": "Мощность",
+          "value": "350 Вт"
+        },
+        {
+          "label": "Каналы",
+          "value": "8"
+        },
+        {
+          "label": "Дальность",
+          "value": "до 2 000 м"
+        },
+        {
+          "label": "Автономность",
+          "value": "до 90 мин"
+        },
+        {
+          "label": "Вес",
+          "value": "18 кг"
+        }
+      ]
+    },
+    {
+      "slug": "garpiya-120w-komplekt",
+      "name": "Комплект ГАРПИЯ 120W с кейсом и ЗУ",
+      "categorySlug": "podaviteli-bpla",
+      "price": null,
+      "inStock": true,
+      "shortDesc": "Полный комплект: блокиратор ГАРПИЯ 120W + защитный кейс + зарядное устройство.",
+      "fullDesc": "Комплект включает блокиратор ГАРПИЯ 120W (6 каналов), профессиональный ударопрочный кейс, зарядное устройство 220В и запасной аккумулятор. Готов к немедленному применению.",
+      "image": "https://skydefence.ru/wa-data/public/shop/products/22/00/22/images/132/132.750x0.png",
+      "gallery": [
+        "https://skydefence.ru/wa-data/public/shop/products/22/00/22/images/132/132.970.png",
+        "https://skydefence.ru/wa-data/public/shop/products/22/00/22/images/133/133.970.png"
+      ],
+      "specs": [
+        {
+          "label": "Мощность",
+          "value": "120 Вт"
+        },
+        {
+          "label": "Каналы",
+          "value": "6"
+        },
+        {
+          "label": "Комплект",
+          "value": "Кейс + ЗУ + доп. АКБ"
+        },
+        {
+          "label": "Автономность",
+          "value": "до 45 мин (90 мин с доп. АКБ)"
+        }
+      ]
+    },
+    {
+      "slug": "garpiya-120w-avto",
+      "name": "ГАРПИЯ 120W — автомобильный вариант (12В)",
+      "categorySlug": "podaviteli-bpla",
+      "price": null,
+      "inStock": true,
+      "shortDesc": "ГАРПИЯ 120W с адаптером питания от автомобильного прикуривателя 12В.",
+      "fullDesc": "Автомобильная версия ГАРПИЯ 120W работает напрямую от бортовой сети 12В. Обеспечивает непрерывную защиту движущейся колонны без разрядки встроенного аккумулятора.",
+      "image": "https://skydefence.ru/wa-data/public/shop/products/22/00/22/images/134/134.750x0.png",
+      "gallery": [
+        "https://skydefence.ru/wa-data/public/shop/products/22/00/22/images/134/134.970.png",
+        "https://skydefence.ru/wa-data/public/shop/products/22/00/22/images/135/135.970.png"
+      ],
+      "specs": [
+        {
+          "label": "Мощность",
+          "value": "120 Вт"
+        },
+        {
+          "label": "Питание",
+          "value": "12В (от бортовой сети)"
+        },
+        {
+          "label": "Каналы",
+          "value": "6"
+        },
+        {
+          "label": "Дальность",
+          "value": "до 2 000 м"
+        }
+      ]
+    },
+    {
+      "slug": "usilitel-2-4-ghz-bpla",
+      "name": "Усилитель сигнала управления БПЛА 2.4 ГГц",
+      "categorySlug": "usiliteli-signala",
+      "price": 34900,
+      "badge": "new",
+      "inStock": true,
+      "shortDesc": "Усиливает радиус управления дроном в диапазоне 2.4 ГГц до 15 км.",
+      "fullDesc": "Профессиональный усилитель сигнала канала управления БПЛА в диапазоне 2.4 ГГц. Увеличивает дальность связи с дроном до 15 км. Совместим со всеми системами на базе FHSS, DSSS и OFDM модуляции. Питание от 12В или USB-C.",
+      "image": "https://skydefence.ru/wa-data/public/shop/products/22/00/22/images/131/131.750x0.png",
+      "gallery": [
+        "https://skydefence.ru/wa-data/public/shop/products/22/00/22/images/131/131.970.png"
+      ],
+      "specs": [
+        {
+          "label": "Диапазон",
+          "value": "2.4 ГГц"
+        },
+        {
+          "label": "Усиление",
+          "value": "+25 dBm"
+        },
+        {
+          "label": "Дальность",
+          "value": "до 15 км"
+        },
+        {
+          "label": "Питание",
+          "value": "12В / USB-C"
+        },
+        {
+          "label": "Размер",
+          "value": "150 × 80 × 30 мм"
+        }
+      ]
+    },
+    {
+      "slug": "usilitel-5-8-ghz-fpv",
+      "name": "Усилитель видеосигнала FPV 5.8 ГГц",
+      "categorySlug": "usiliteli-signala",
+      "price": 28900,
+      "inStock": true,
+      "shortDesc": "Усилитель FPV-видеосигнала 5.8 ГГц для дальней видеосвязи с БПЛА.",
+      "fullDesc": "Усилитель сигнала видеопередачи 5.8 ГГц для FPV-систем дронов. Улучшает качество изображения и увеличивает дальность видеосвязи. Совместим с DJI Digital FPV, TBS Unify, Runcam.",
+      "image": "https://skydefence.ru/wa-data/public/shop/products/23/00/23/images/136/136.750x0.png",
+      "gallery": [
+        "https://skydefence.ru/wa-data/public/shop/products/23/00/23/images/136/136.970.png"
+      ],
+      "specs": [
+        {
+          "label": "Диапазон",
+          "value": "5.8 ГГц"
+        },
+        {
+          "label": "Усиление",
+          "value": "+20 dBm"
+        },
+        {
+          "label": "Дальность",
+          "value": "до 10 км"
+        },
+        {
+          "label": "Питание",
+          "value": "12В"
+        }
+      ]
+    },
+    {
+      "slug": "retranslyator-signala-bpla",
+      "name": "Ретранслятор сигнала БПЛА наземный",
+      "categorySlug": "usiliteli-signala",
+      "price": null,
+      "badge": "new",
+      "inStock": true,
+      "shortDesc": "Наземная ретрансляционная станция — связь с БПЛА за горизонтом без прямой видимости.",
+      "fullDesc": "Наземный ретранслятор сигнала позволяет управлять БПЛА за горизонтом и в условиях сложного рельефа. Два независимых радиомоста: 2.4 ГГц и 900 МГц. Водозащищённый корпус IP54.",
+      "image": "https://skydefence.ru/wa-data/public/shop/products/24/00/24/images/139/139.750x0.png",
+      "gallery": [
+        "https://skydefence.ru/wa-data/public/shop/products/24/00/24/images/139/139.970.png"
+      ],
+      "specs": [
+        {
+          "label": "Диапазоны",
+          "value": "900 МГц + 2.4 ГГц"
+        },
+        {
+          "label": "Покрытие",
+          "value": "360°"
+        },
+        {
+          "label": "Дальность",
+          "value": "до 20 км"
+        },
+        {
+          "label": "Защита",
+          "value": "IP54"
+        },
+        {
+          "label": "Питание",
+          "value": "12–24В / встроенный АКБ"
+        }
+      ]
+    },
+    {
+      "slug": "antenna-napravlennaya-yagi",
+      "name": "Направленная антенна Yagi 2.4 ГГц для БПЛА",
+      "categorySlug": "usiliteli-signala",
+      "price": 15900,
+      "inStock": true,
+      "shortDesc": "Высокоусилительная направленная антенна Yagi — дальность управления до 25 км.",
+      "fullDesc": "Направленная антенна типа Yagi для диапазона 2.4 ГГц с коэффициентом усиления 16 dBi. Увеличивает дальность управления дроном до 25 км по прямой видимости. Совместима со всеми пультами DJI, Futaba, FrSky.",
+      "image": "https://skydefence.ru/wa-data/public/shop/products/22/00/22/images/132/132.750x0.png",
+      "gallery": [
+        "https://skydefence.ru/wa-data/public/shop/products/22/00/22/images/132/132.970.png"
+      ],
+      "specs": [
+        {
+          "label": "Тип",
+          "value": "Yagi направленная"
+        },
+        {
+          "label": "Усиление",
+          "value": "16 dBi"
+        },
+        {
+          "label": "Диапазон",
+          "value": "2.4 ГГц"
+        },
+        {
+          "label": "Дальность",
+          "value": "до 25 км"
+        },
+        {
+          "label": "Разъём",
+          "value": "SMA / RP-SMA"
+        }
+      ]
+    },
+    {
+      "slug": "spp-100-bpla",
+      "name": "Система постоянного питания БПЛА СПП-100",
+      "categorySlug": "sistemy-monitoringa-dronom",
+      "price": null,
+      "badge": "new",
+      "inStock": true,
+      "shortDesc": "Тросовая система питания СПП-100 — неограниченное время полёта БПЛА, трос 100 м.",
+      "fullDesc": "СПП-100 — система постоянного питания для беспилотных летательных аппаратов. Квадрокоптер получает энергию через тонкий трос от наземного источника, обеспечивая практически неограниченное время дежурства в воздухе. Мощность 100 Вт, длина троса 100 м.",
+      "image": "https://skydefence.ru/wa-data/public/shop/products/67/03/367/images/1912/1912.750x0.webp",
+      "gallery": [
+        "https://skydefence.ru/wa-data/public/shop/products/67/03/367/images/1912/1912.970.webp"
+      ],
+      "specs": [
+        {
+          "label": "Мощность",
+          "value": "100 Вт"
+        },
+        {
+          "label": "Длина троса",
+          "value": "100 м"
+        },
+        {
+          "label": "Напряжение",
+          "value": "24–54В"
+        },
+        {
+          "label": "Совмест. БПЛА",
+          "value": "DJI M300 / M350 / Autel EVO II"
+        },
+        {
+          "label": "Вес системы",
+          "value": "8 кг"
+        }
+      ]
+    },
+    {
+      "slug": "spp-200-bpla",
+      "name": "Система постоянного питания БПЛА СПП-200",
+      "categorySlug": "sistemy-monitoringa-dronom",
+      "price": null,
+      "inStock": true,
+      "shortDesc": "Тросовая система питания СПП-200 — 200 Вт, трос 100 м, для тяжёлых БПЛА до 8 кг.",
+      "fullDesc": "СПП-200 — усиленная версия системы постоянного питания для тяжёлых БПЛА до 8 кг взлётной массы. Обеспечивает длительное дежурство в воздухе для задач видеонаблюдения и охраны периметра.",
+      "image": "https://skydefence.ru/wa-data/public/shop/products/67/03/367/images/1913/1913.750x0.webp",
+      "gallery": [
+        "https://skydefence.ru/wa-data/public/shop/products/67/03/367/images/1913/1913.970.webp"
+      ],
+      "specs": [
+        {
+          "label": "Мощность",
+          "value": "200 Вт"
+        },
+        {
+          "label": "Длина троса",
+          "value": "100 м"
+        },
+        {
+          "label": "Макс. масса БПЛА",
+          "value": "8 кг"
+        },
+        {
+          "label": "Питание",
+          "value": "220В / 12В"
+        },
+        {
+          "label": "Вес",
+          "value": "12 кг"
+        }
+      ]
+    },
+    {
+      "slug": "spp-300-bpla",
+      "name": "Система постоянного питания БПЛА СПП-300 (трос 150 м)",
+      "categorySlug": "sistemy-monitoringa-dronom",
+      "price": null,
+      "badge": "new",
+      "inStock": true,
+      "shortDesc": "Мощность 300 Вт, трос 150 м — для дежурных БПЛА без ограничений по времени.",
+      "fullDesc": "СПП-300 — мощная система питания для дежурных БПЛА. Трос длиной 150 м, специальная кабельная катушка с динамическим натяжением. Совместима с промышленными БПЛА мощностью до 15 кг.",
+      "image": "https://skydefence.ru/wa-data/public/shop/products/76/01/176/images/832/832.750x0.png",
+      "gallery": [
+        "https://skydefence.ru/wa-data/public/shop/products/76/01/176/images/832/832.970.png"
+      ],
+      "specs": [
+        {
+          "label": "Мощность",
+          "value": "300 Вт"
+        },
+        {
+          "label": "Длина троса",
+          "value": "150 м"
+        },
+        {
+          "label": "Напряжение",
+          "value": "48В"
+        },
+        {
+          "label": "Катушка",
+          "value": "Авто-динамическая"
+        },
+        {
+          "label": "Вес",
+          "value": "18 кг"
+        }
+      ]
+    },
+    {
+      "slug": "spp-mobilnyy-komplekt",
+      "name": "Мобильный комплект СПП (автомобильный, 12В)",
+      "categorySlug": "sistemy-monitoringa-dronom",
+      "price": null,
+      "inStock": true,
+      "shortDesc": "Мобильный комплект СПП — развёртывание с любого автомобиля, инвертор 1000 Вт.",
+      "fullDesc": "Мобильный комплект для развёртывания системы постоянного питания БПЛА с любого автомобиля. Инвертор 1000 Вт, катушка с тросом 100 м, подключение от бортовой сети 12В. Время развёртывания — 5 минут.",
+      "image": "https://skydefence.ru/wa-data/public/shop/products/76/01/176/images/833/833.750x0.png",
+      "gallery": [
+        "https://skydefence.ru/wa-data/public/shop/products/76/01/176/images/833/833.970.png"
+      ],
+      "specs": [
+        {
+          "label": "Инвертор",
+          "value": "1000 Вт"
+        },
+        {
+          "label": "Трос",
+          "value": "100 м"
+        },
+        {
+          "label": "Питание",
+          "value": "12В (бортовая сеть)"
+        },
+        {
+          "label": "Развёртыв.",
+          "value": "5 мин"
+        },
+        {
+          "label": "Вес",
+          "value": "15 кг"
+        }
+      ]
+    },
+    {
+      "slug": "dji-mavic-3-classic-rc",
+      "name": "Квадрокоптер DJI Mavic 3 Classic RC",
+      "categorySlug": "kvadrokoptery",
+      "price": 175000,
+      "oldPrice": 195000,
+      "badge": "sale",
+      "inStock": true,
+      "shortDesc": "Профессиональный квадрокоптер DJI с камерой Hasselblad и пультом RC с экраном.",
+      "fullDesc": "DJI Mavic 3 Classic — профессиональный дрон с камерой Hasselblad 4/3 CMOS. Время полёта до 46 минут, дальность передачи видео до 15 км (O3). Умная система обхода препятствий APAS 5.0.",
+      "image": "https://skydefence.ru/wa-data/public/shop/products/02/00/2/images/13/13.750x0.png",
+      "gallery": [
+        "https://skydefence.ru/wa-data/public/shop/products/02/00/2/images/13/13.970.png",
+        "https://skydefence.ru/wa-data/public/shop/products/02/00/2/images/14/14.970.png",
+        "https://skydefence.ru/wa-data/public/shop/products/02/00/2/images/9/9.970.png",
+        "https://skydefence.ru/wa-data/public/shop/products/02/00/2/images/10/10.970.png",
+        "https://skydefence.ru/wa-data/public/shop/products/02/00/2/images/11/11.970.png"
+      ],
+      "specs": [
+        {
+          "label": "Время полёта",
+          "value": "до 46 мин"
+        },
+        {
+          "label": "Дальность",
+          "value": "15 км (O3)"
+        },
+        {
+          "label": "Камера",
+          "value": "Hasselblad 4/3 CMOS, 20 МП"
+        },
+        {
+          "label": "Видео",
+          "value": "5.1K/50fps, 4K/120fps"
+        },
+        {
+          "label": "Скорость",
+          "value": "21 м/с"
+        },
+        {
+          "label": "Вес",
+          "value": "895 г"
+        }
+      ]
+    },
+    {
+      "slug": "dji-mavic-3-pro",
+      "name": "Квадрокоптер DJI Mavic 3 Pro",
+      "categorySlug": "kvadrokoptery",
+      "price": 299000,
+      "inStock": true,
+      "shortDesc": "Тройная камера Hasselblad с зум 7×, профессиональная аэросъёмка.",
+      "fullDesc": "DJI Mavic 3 Pro — флагманский складной дрон с тремя камерами Hasselblad (28/70/166 мм). Зум до 7×, время полёта 43 мин.",
+      "image": "https://skydefence.ru/wa-data/public/shop/products/02/00/2/images/14/14.750x0.png",
+      "gallery": [
+        "https://skydefence.ru/wa-data/public/shop/products/02/00/2/images/14/14.970.png",
+        "https://skydefence.ru/wa-data/public/shop/products/02/00/2/images/13/13.970.png"
+      ],
+      "specs": [
+        {
+          "label": "Камеры",
+          "value": "3× Hasselblad (28/70/166 мм)"
+        },
+        {
+          "label": "Зум",
+          "value": "до 7×"
+        },
+        {
+          "label": "Время полёта",
+          "value": "43 мин"
+        },
+        {
+          "label": "Видео",
+          "value": "5.1K/50fps"
+        },
+        {
+          "label": "Вес",
+          "value": "958 г"
+        }
+      ]
+    },
+    {
+      "slug": "dji-mini-4k",
+      "name": "Квадрокоптер DJI Mini 4K Fly More Combo",
+      "categorySlug": "kvadrokoptery",
+      "price": 47990,
+      "badge": "hit",
+      "inStock": true,
+      "shortDesc": "Лёгкий дрон до 249 г с камерой 4K — не требует регистрации, набор Fly More.",
+      "fullDesc": "DJI Mini 4K — весит менее 249 г (не требует регистрации в РФ). Комплект Fly More: 3 аккумулятора, зарядный хаб и сумка.",
+      "image": "https://skydefence.ru/wa-data/public/shop/products/02/00/2/images/9/9.750x0.png",
+      "gallery": [
+        "https://skydefence.ru/wa-data/public/shop/products/02/00/2/images/9/9.970.png",
+        "https://skydefence.ru/wa-data/public/shop/products/02/00/2/images/10/10.970.png"
+      ],
+      "specs": [
+        {
+          "label": "Вес",
+          "value": "< 249 г"
+        },
+        {
+          "label": "Камера",
+          "value": "4K/30fps"
+        },
+        {
+          "label": "Время полёта",
+          "value": "до 34 мин"
+        },
+        {
+          "label": "Дальность",
+          "value": "10 км"
+        }
+      ]
+    },
+    {
+      "slug": "dji-mini-3-pro",
+      "name": "Квадрокоптер DJI Mini 3 Pro",
+      "categorySlug": "kvadrokoptery",
+      "price": 119990,
+      "inStock": true,
+      "shortDesc": "Профессиональные функции в лёгком корпусе до 249 г — обход препятствий APAS.",
+      "fullDesc": "DJI Mini 3 Pro сочетает лёгкость (249 г) с профессиональными возможностями: обход препятствий APAS 4.0, вертикальная съёмка 4K, время полёта до 47 мин с расширенным аккумулятором.",
+      "image": "https://skydefence.ru/wa-data/public/shop/products/02/00/2/images/10/10.750x0.png",
+      "gallery": [
+        "https://skydefence.ru/wa-data/public/shop/products/02/00/2/images/10/10.970.png",
+        "https://skydefence.ru/wa-data/public/shop/products/02/00/2/images/11/11.970.png"
+      ],
+      "specs": [
+        {
+          "label": "Вес",
+          "value": "249 г"
+        },
+        {
+          "label": "Камера",
+          "value": "4K/60fps, вертикальная съёмка"
+        },
+        {
+          "label": "APAS",
+          "value": "4.0 — 3 направления"
+        },
+        {
+          "label": "Время полёта",
+          "value": "до 47 мин (с доп. АКБ)"
+        }
+      ]
+    },
+    {
+      "slug": "dji-matrice-30t",
+      "name": "Промышленный дрон DJI Matrice 30T",
+      "categorySlug": "kvadrokoptery",
+      "price": null,
+      "badge": "new",
+      "inStock": true,
+      "shortDesc": "Промышленный IP55-дрон с тепловизором и 200× зумом — для разведки и охраны.",
+      "fullDesc": "DJI Matrice 30T — складной промышленный дрон с тепловизором (640×512), телекамерой 200× зум и широкоугольником. IP55 — работает в дождь и снег.",
+      "image": "https://skydefence.ru/wa-data/public/shop/products/02/00/2/images/11/11.750x0.png",
+      "gallery": [
+        "https://skydefence.ru/wa-data/public/shop/products/02/00/2/images/11/11.970.png",
+        "https://skydefence.ru/wa-data/public/shop/products/02/00/2/images/12/12.970.png"
+      ],
+      "specs": [
+        {
+          "label": "Камеры",
+          "value": "Тепловизор + 200× зум + Широкоугольник"
+        },
+        {
+          "label": "Защита",
+          "value": "IP55"
+        },
+        {
+          "label": "Время полёта",
+          "value": "до 41 мин"
+        },
+        {
+          "label": "Ветер",
+          "value": "до 15 м/с"
+        },
+        {
+          "label": "Вес",
+          "value": "3.77 кг"
+        }
+      ]
+    },
+    {
+      "slug": "dji-agras-t40",
+      "name": "Агродрон DJI Agras T40",
+      "categorySlug": "kvadrokoptery",
+      "price": null,
+      "inStock": true,
+      "shortDesc": "Профессиональный агродрон — бак 40 л, производительность 40 га/ч.",
+      "fullDesc": "DJI Agras T40 — лидер рынка агродронов. Бак 40 л, насос 8 л/мин, производительность до 40 га/ч. Навигация RTK + GNSS.",
+      "image": "https://skydefence.ru/wa-data/public/shop/products/02/00/2/images/12/12.750x0.png",
+      "gallery": [
+        "https://skydefence.ru/wa-data/public/shop/products/02/00/2/images/12/12.970.png"
+      ],
+      "specs": [
+        {
+          "label": "Бак",
+          "value": "40 л"
+        },
+        {
+          "label": "Производит.",
+          "value": "до 40 га/ч"
+        },
+        {
+          "label": "Навигация",
+          "value": "RTK + GNSS"
+        },
+        {
+          "label": "Вес (пустой)",
+          "value": "47.5 кг"
+        }
+      ]
+    },
+    {
+      "slug": "dji-fpv-combo",
+      "name": "FPV-дрон DJI FPV Combo",
+      "categorySlug": "kvadrokoptery",
+      "price": 89990,
+      "inStock": true,
+      "shortDesc": "Иммерсивный FPV-дрон 4K/60fps — скорость до 140 км/ч, очки в комплекте.",
+      "fullDesc": "DJI FPV Combo — первый FPV-дрон DJI с очками O3. Три режима: Обычный, Спорт и Ручной. Максимальная скорость 140 км/ч, время полёта 20 мин.",
+      "image": "https://skydefence.ru/wa-data/public/shop/products/02/00/2/images/13/13.750x0.png",
+      "gallery": [
+        "https://skydefence.ru/wa-data/public/shop/products/02/00/2/images/13/13.970.png"
+      ],
+      "specs": [
+        {
+          "label": "Скорость",
+          "value": "до 140 км/ч"
+        },
+        {
+          "label": "Камера",
+          "value": "4K/60fps"
+        },
+        {
+          "label": "Время полёта",
+          "value": "20 мин"
+        },
+        {
+          "label": "Комплект",
+          "value": "Дрон + очки + пульт"
+        }
+      ]
+    },
+    {
+      "slug": "ryukzak-eberlestock-terminator",
+      "name": "Рюкзак Eberlestock Terminator Pack Multicam",
+      "categorySlug": "militar",
+      "price": 70900,
+      "inStock": true,
+      "shortDesc": "Тактический рюкзак 55 л с системой MOLLE и скрытым отделением для оружия.",
+      "fullDesc": "Eberlestock Terminator — легендарный тактический рюкзак американского производства. Объём 55 л, система Intex Frame, скрытое отделение для длинноствольного оружия.",
+      "image": "https://skydefence.ru/wa-data/public/shop/products/53/01/153/images/733/733.750x0.png",
+      "gallery": [
+        "https://skydefence.ru/wa-data/public/shop/products/53/01/153/images/733/733.970.png",
+        "https://skydefence.ru/wa-data/public/shop/products/53/01/153/images/734/734.970.png",
+        "https://skydefence.ru/wa-data/public/shop/products/53/01/153/images/735/735.970.png",
+        "https://skydefence.ru/wa-data/public/shop/products/53/01/153/images/736/736.970.png"
+      ],
+      "specs": [
+        {
+          "label": "Объём",
+          "value": "55 л"
+        },
+        {
+          "label": "Система",
+          "value": "MOLLE / Intex Frame"
+        },
+        {
+          "label": "Материал",
+          "value": "500D Cordura"
+        },
+        {
+          "label": "Цвет",
+          "value": "Multicam"
+        },
+        {
+          "label": "Вес",
+          "value": "3.1 кг"
+        }
+      ]
+    },
+    {
+      "slug": "ryukzak-5-11-rush72",
+      "name": "Рюкзак 5.11 Tactical RUSH72 2.0",
+      "categorySlug": "militar",
+      "price": 24900,
+      "badge": "hit",
+      "inStock": true,
+      "shortDesc": "Тактический рюкзак 55 л — популярная модель для снаряжения и переноски.",
+      "fullDesc": "5.11 RUSH72 — один из самых популярных тактических рюкзаков. Объём 55 л, 16 карманов, совместимость с гидратором, система MOLLE.",
+      "image": "https://skydefence.ru/wa-data/public/shop/products/53/01/153/images/734/734.750x0.png",
+      "gallery": [
+        "https://skydefence.ru/wa-data/public/shop/products/53/01/153/images/734/734.970.png",
+        "https://skydefence.ru/wa-data/public/shop/products/53/01/153/images/735/735.970.png"
+      ],
+      "specs": [
+        {
+          "label": "Объём",
+          "value": "55 л"
+        },
+        {
+          "label": "Карманы",
+          "value": "16 отделений"
+        },
+        {
+          "label": "Система",
+          "value": "MOLLE"
+        },
+        {
+          "label": "Вес",
+          "value": "1.9 кг"
+        }
+      ]
+    },
+    {
+      "slug": "takticheskiy-zhilet-molle",
+      "name": "Тактический разгрузочный жилет MOLLE",
+      "categorySlug": "militar",
+      "price": 8900,
+      "inStock": true,
+      "shortDesc": "Облегчённый разгрузочный жилет с системой MOLLE для носки снаряжения.",
+      "fullDesc": "Тактический жилет с системой MOLLE и 8 подсумками в комплекте. Материал — 1000D Oxford.",
+      "image": "https://skydefence.ru/wa-data/public/shop/products/53/01/153/images/735/735.750x0.png",
+      "gallery": [
+        "https://skydefence.ru/wa-data/public/shop/products/53/01/153/images/735/735.970.png",
+        "https://skydefence.ru/wa-data/public/shop/products/53/01/153/images/736/736.970.png"
+      ],
+      "specs": [
+        {
+          "label": "Система",
+          "value": "MOLLE"
+        },
+        {
+          "label": "Подсумки",
+          "value": "8 шт в комплекте"
+        },
+        {
+          "label": "Материал",
+          "value": "1000D Oxford"
+        }
+      ]
+    },
+    {
+      "slug": "perchatki-mechanix-m-pact",
+      "name": "Перчатки тактические Mechanix Wear M-Pact",
+      "categorySlug": "militar",
+      "price": 4900,
+      "inStock": true,
+      "shortDesc": "Тактические перчатки с защитой костяшек и пальцев от ударов.",
+      "fullDesc": "Mechanix M-Pact — одни из самых популярных тактических перчаток. Накладки TPR на костяшках, совместимы с сенсорными экранами.",
+      "image": "https://skydefence.ru/wa-data/public/shop/products/53/01/153/images/736/736.750x0.png",
+      "gallery": [
+        "https://skydefence.ru/wa-data/public/shop/products/53/01/153/images/736/736.970.png"
+      ],
+      "specs": [
+        {
+          "label": "Защита",
+          "value": "Костяшки, ладонь"
+        },
+        {
+          "label": "Тачскрин",
+          "value": "Да"
+        },
+        {
+          "label": "Размеры",
+          "value": "S / M / L / XL"
+        }
+      ]
+    },
+    {
+      "slug": "balaklava-helikon",
+      "name": "Балаклава тактическая Helikon-Tex Nomex",
+      "categorySlug": "militar",
+      "price": 2490,
+      "inStock": true,
+      "shortDesc": "Защитная балаклава из огнестойкого материала Nomex.",
+      "fullDesc": "Тактическая балаклава Helikon-Tex из материала Nomex FR — огнестойкого и термозащитного. Полностью закрывает голову и шею.",
+      "image": "https://skydefence.ru/wa-data/public/shop/products/53/01/153/images/737/737.750x0.png",
+      "gallery": [
+        "https://skydefence.ru/wa-data/public/shop/products/53/01/153/images/737/737.970.png"
+      ],
+      "specs": [
+        {
+          "label": "Материал",
+          "value": "Nomex FR (огнестойкий)"
+        },
+        {
+          "label": "Цвет",
+          "value": "Черный / Coyote / Мультикам"
+        }
+      ]
+    },
+    {
+      "slug": "ecoflow-delta-3-max",
+      "name": "Портативная электростанция EcoFlow Delta 3 Max",
+      "categorySlug": "elektrostantsii",
+      "price": 124900,
+      "badge": "new",
+      "inStock": true,
+      "shortDesc": "Мощность 3200 Вт, ёмкость 2048 Вт·ч — питание штаба или полевого лагеря до 2 суток.",
+      "fullDesc": "EcoFlow Delta 3 Max — портативная электростанция с мощностью 3200 Вт (X-Boost 3.0) и ёмкостью 2048 Вт·ч. Зарядка до 80% за 68 минут. Аккумулятор LiFePO4 на 4000 циклов, работает от −10°C до +45°C. Управление через приложение.",
+      "image": "https://skydefence.ru/wa-data/public/shop/products/67/03/367/images/1910/1910.750x0.webp",
+      "gallery": [
+        "https://skydefence.ru/wa-data/public/shop/products/67/03/367/images/1910/1910.970.webp",
+        "https://skydefence.ru/wa-data/public/shop/products/67/03/367/images/1911/1911.970.webp",
+        "https://skydefence.ru/wa-data/public/shop/products/67/03/367/images/1912/1912.970.webp",
+        "https://skydefence.ru/wa-data/public/shop/products/67/03/367/images/1913/1913.970.webp"
+      ],
+      "specs": [
+        {
+          "label": "Ёмкость",
+          "value": "2 048 Вт·ч"
+        },
+        {
+          "label": "Мощность",
+          "value": "3 200 Вт (X-Boost 3.0)"
+        },
+        {
+          "label": "Зарядка",
+          "value": "0–80% за 68 мин"
+        },
+        {
+          "label": "Циклы",
+          "value": "4 000 (до 10 лет)"
+        },
+        {
+          "label": "Температура",
+          "value": "−10°C … +45°C"
+        },
+        {
+          "label": "Вес",
+          "value": "19 кг"
+        }
+      ]
+    },
+    {
+      "slug": "jackery-1000w-plus",
+      "name": "Портативная электростанция Jackery 1000W Plus",
+      "categorySlug": "elektrostantsii",
+      "price": 85900,
+      "badge": "hit",
+      "inStock": true,
+      "shortDesc": "Jackery 1000 Plus — 2000 Вт, 1264 Вт·ч, 4000 циклов — до 10 лет службы.",
+      "fullDesc": "Jackery Explorer 1000 Plus — мощность 2000 Вт, ёмкость 1264 Вт·ч. Зарядка за 1,7 ч от сети или от SolarSaga 200W. Аккумулятор LiFePO4 на 4000 циклов. Расширяется до 3 доп. блоков (×4 ёмкость). Управление по Wi-Fi/Bluetooth.",
+      "image": "https://skydefence.ru/wa-data/public/shop/products/76/01/176/images/831/831.750x0.png",
+      "gallery": [
+        "https://skydefence.ru/wa-data/public/shop/products/76/01/176/images/831/831.970.png",
+        "https://skydefence.ru/wa-data/public/shop/products/76/01/176/images/832/832.970.png",
+        "https://skydefence.ru/wa-data/public/shop/products/76/01/176/images/833/833.970.png"
+      ],
+      "specs": [
+        {
+          "label": "Ёмкость",
+          "value": "1 264 Вт·ч"
+        },
+        {
+          "label": "Мощность",
+          "value": "2 000 Вт"
+        },
+        {
+          "label": "Зарядка",
+          "value": "0–100% за 1,7 часа"
+        },
+        {
+          "label": "Циклы",
+          "value": "4 000 (до 10 лет)"
+        },
+        {
+          "label": "Расширение",
+          "value": "+3 доп. блока (×4)"
+        },
+        {
+          "label": "Вес",
+          "value": "13.3 кг"
+        }
+      ]
+    },
+    {
+      "slug": "ecoflow-delta-3-max-solar",
+      "name": "Комплект EcoFlow Delta 3 Max + SolarPanel 220W",
+      "categorySlug": "elektrostantsii",
+      "price": 164900,
+      "inStock": true,
+      "shortDesc": "Электростанция EcoFlow Delta 3 Max в комплекте с солнечной панелью 220 Вт — автономное питание.",
+      "fullDesc": "Комплект из электростанции EcoFlow Delta 3 Max (2048 Вт·ч) и солнечной панели 220 Вт. Полностью заряжается от солнца за 8–10 часов. Идеален для полевых позиций и блокпостов без доступа к сети.",
+      "image": "https://skydefence.ru/wa-data/public/shop/products/67/03/367/images/1911/1911.750x0.webp",
+      "gallery": [
+        "https://skydefence.ru/wa-data/public/shop/products/67/03/367/images/1911/1911.970.webp",
+        "https://skydefence.ru/wa-data/public/shop/products/67/03/367/images/1910/1910.970.webp"
+      ],
+      "specs": [
+        {
+          "label": "Ёмкость",
+          "value": "2 048 Вт·ч"
+        },
+        {
+          "label": "Солнечная пан.",
+          "value": "220 Вт"
+        },
+        {
+          "label": "Зарядка ☀",
+          "value": "8–10 часов"
+        },
+        {
+          "label": "Мощность",
+          "value": "3 200 Вт"
+        },
+        {
+          "label": "Автономность",
+          "value": "неограниченно от солнца"
+        }
+      ]
+    },
+    {
+      "slug": "starlink-kit-standard",
+      "name": "Комплект Starlink Standard Kit",
+      "categorySlug": "sputnik",
+      "price": null,
+      "badge": "hit",
+      "inStock": true,
+      "shortDesc": "Спутниковый интернет Starlink — скорость 50–200 Мбит/с в любой точке России.",
+      "fullDesc": "Starlink Standard Kit — комплект для подключения спутникового интернета от SpaceX. Тарелка-антенна, роутер Wi-Fi 6, кабель 15 м. Скорость 50–200 Мбит/с.",
+      "image": "https://skydefence.ru/wa-data/public/shop/products/53/01/153/images/735/735.750x0.png",
+      "gallery": [
+        "https://skydefence.ru/wa-data/public/shop/products/53/01/153/images/735/735.970.png",
+        "https://skydefence.ru/wa-data/public/shop/products/53/01/153/images/736/736.970.png"
+      ],
+      "specs": [
+        {
+          "label": "Скорость",
+          "value": "50–200 Мбит/с"
+        },
+        {
+          "label": "Задержка",
+          "value": "20–60 мс"
+        },
+        {
+          "label": "Роутер",
+          "value": "Wi-Fi 6 (802.11ax)"
+        },
+        {
+          "label": "Температура",
+          "value": "-30°C … +50°C"
+        }
+      ]
+    },
+    {
+      "slug": "starlink-mini-kit",
+      "name": "Комплект Starlink Mini Kit",
+      "categorySlug": "sputnik",
+      "price": null,
+      "inStock": true,
+      "shortDesc": "Компактный Starlink Mini — весит 1.1 кг, питается от повербанка 45 Вт.",
+      "fullDesc": "Starlink Mini — тарелка 30×25 см, вес 1.1 кг. Питание USB-C 45 Вт — совместим с EcoFlow DELTA. Скорость до 100 Мбит/с.",
+      "image": "https://skydefence.ru/wa-data/public/shop/products/53/01/153/images/736/736.750x0.png",
+      "gallery": [
+        "https://skydefence.ru/wa-data/public/shop/products/53/01/153/images/736/736.970.png"
+      ],
+      "specs": [
+        {
+          "label": "Скорость",
+          "value": "до 100 Мбит/с"
+        },
+        {
+          "label": "Размер",
+          "value": "30×25 см"
+        },
+        {
+          "label": "Вес",
+          "value": "1.1 кг"
+        },
+        {
+          "label": "Питание",
+          "value": "USB-C 45 Вт"
+        }
+      ]
+    }
+  ]
+}

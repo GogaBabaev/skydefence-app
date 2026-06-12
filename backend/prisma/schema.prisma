@@ -1,0 +1,170 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ── Users ──────────────────────────────────────────────────────────
+model User {
+  id          BigInt       @id // Telegram user id
+  username    String?
+  firstName   String?      @map("first_name")
+  lastName    String?      @map("last_name")
+  phone       String?
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+  orders      Order[]
+  b2bRequests B2bRequest[]
+
+  @@map("users")
+}
+
+// ── Catalog ────────────────────────────────────────────────────────
+model Category {
+  id       Int       @id @default(autoincrement())
+  slug     String    @unique
+  label    String
+  products Product[]
+
+  @@map("categories")
+}
+
+model Product {
+  id         Int         @id @default(autoincrement())
+  slug       String      @unique
+  name       String
+  categoryId Int         @map("category_id")
+  category   Category    @relation(fields: [categoryId], references: [id])
+  /// null = price on request (B2B)
+  price      Decimal?    @db.Decimal(12, 2)
+  oldPrice   Decimal?    @map("old_price") @db.Decimal(12, 2)
+  badge      String?
+  inStock    Boolean     @default(true) @map("in_stock")
+  shortDesc  String      @map("short_desc")
+  fullDesc   String      @map("full_desc")
+  image      String
+  gallery    String[]
+  specs      Json        @default("[]")
+  isActive   Boolean     @default(true) @map("is_active")
+  createdAt  DateTime    @default(now()) @map("created_at")
+  updatedAt  DateTime    @updatedAt @map("updated_at")
+  orderItems OrderItem[]
+
+  @@index([categoryId])
+  @@map("products")
+}
+
+// ── Orders ─────────────────────────────────────────────────────────
+enum OrderStatus {
+  PENDING // created, no payment attempt yet
+  AWAITING_PAYMENT // payment created in YooKassa
+  PAID
+  CANCELED
+  FULFILLED
+}
+
+model Order {
+  id              String      @id @default(uuid())
+  number          Int         @unique @default(autoincrement())
+  userId          BigInt      @map("user_id")
+  user            User        @relation(fields: [userId], references: [id])
+  status          OrderStatus @default(PENDING)
+  totalAmount     Decimal     @map("total_amount") @db.Decimal(12, 2)
+  currency        String      @default("RUB")
+  customerName    String      @map("customer_name")
+  customerPhone   String      @map("customer_phone")
+  customerEmail   String?     @map("customer_email")
+  company         String?
+  inn             String?
+  deliveryAddress String?     @map("delivery_address")
+  comment         String?
+  createdAt       DateTime    @default(now()) @map("created_at")
+  updatedAt       DateTime    @updatedAt @map("updated_at")
+  items           OrderItem[]
+  payments        Payment[]
+
+  @@index([userId])
+  @@map("orders")
+}
+
+model OrderItem {
+  id          Int     @id @default(autoincrement())
+  orderId     String  @map("order_id")
+  order       Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId   Int     @map("product_id")
+  product     Product @relation(fields: [productId], references: [id])
+  // Snapshot at purchase time — product may change later
+  productName String  @map("product_name")
+  unitPrice   Decimal @map("unit_price") @db.Decimal(12, 2)
+  quantity    Int
+
+  @@index([orderId])
+  @@map("order_items")
+}
+
+// ── Payments ───────────────────────────────────────────────────────
+enum PaymentStatus {
+  PENDING
+  WAITING_FOR_CAPTURE
+  SUCCEEDED
+  CANCELED
+}
+
+model Payment {
+  id              String        @id @default(uuid())
+  orderId         String        @map("order_id")
+  order           Order         @relation(fields: [orderId], references: [id])
+  provider        String        @default("yookassa")
+  /// YooKassa payment id
+  externalId      String?       @unique @map("external_id")
+  status          PaymentStatus @default(PENDING)
+  amount          Decimal       @db.Decimal(12, 2)
+  currency        String        @default("RUB")
+  confirmationUrl String?       @map("confirmation_url")
+  idempotenceKey  String        @unique @map("idempotence_key")
+  rawPayload      Json?         @map("raw_payload")
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+
+  @@index([orderId])
+  @@map("payments")
+}
+
+/// Webhook audit + idempotency
+model WebhookEvent {
+  id                String   @id @default(uuid())
+  type              String
+  paymentExternalId String   @map("payment_external_id")
+  payload           Json
+  processedAt       DateTime @default(now()) @map("processed_at")
+
+  @@unique([type, paymentExternalId])
+  @@map("webhook_events")
+}
+
+// ── B2B requests ───────────────────────────────────────────────────
+enum B2bStatus {
+  NEW
+  IN_PROGRESS
+  CLOSED
+}
+
+model B2bRequest {
+  id          Int       @id @default(autoincrement())
+  userId      BigInt?   @map("user_id")
+  user        User?     @relation(fields: [userId], references: [id])
+  company     String
+  inn         String?
+  contactName String    @map("contact_name")
+  phone       String
+  email       String?
+  productSlug String?   @map("product_slug")
+  message     String
+  status      B2bStatus @default(NEW)
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  @@map("b2b_requests")
+}

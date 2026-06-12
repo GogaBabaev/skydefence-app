@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { SlidersHorizontal } from 'lucide-react';
-import { products, categories, getByCategory } from '../data/products';
-import { ProductCard } from '../components/ProductCard';
+import { categories } from '../entities/product/data/catalog.static';
+import { useProducts } from '../entities/product/api';
+import { ProductCard } from '../entities/product/ui/ProductCard';
 
 export const Catalog = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -16,7 +17,9 @@ export const Catalog = () => {
     setSearchParams(searchParams);
   };
 
-  let items = getByCategory(catSlug);
+  // catalog comes from the backend API (static bundle as offline fallback)
+  const { products } = useProducts(catSlug);
+  let items = products;
   if (sortBy === 'price_asc')  items = [...items].sort((a,b) => (a.price ?? 999999) - (b.price ?? 999999));
   if (sortBy === 'price_desc') items = [...items].sort((a,b) => (b.price ?? 0) - (a.price ?? 0));
 

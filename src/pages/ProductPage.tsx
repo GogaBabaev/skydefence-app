@@ -2,8 +2,10 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, ShoppingCart, Phone, CheckCircle, X, Share2 } from 'lucide-react';
-import { products } from '../data/products';
-import { useTelegram } from '../hooks/useTelegram';
+import { useProduct } from '../entities/product/api';
+import { useCart } from '../features/cart/model/cart.store';
+import { useTelegram } from '../shared/lib/useTelegram';
+import { BackButton } from '../shared/ui/BackButton';
 
 const fmtPrice = (p: number) => p.toLocaleString('ru-RU') + ' ₽';
 
@@ -17,7 +19,8 @@ export const ProductPage = () => {
   const [form, setForm]         = useState({ name: '', phone: '' });
   const [added, setAdded]       = useState(false);
 
-  const product = products.find(p => p.slug === slug);
+  const product = useProduct(slug);
+  const { add } = useCart();
 
   useEffect(() => {
     const back = () => navigate(-1);
@@ -33,6 +36,7 @@ export const ProductPage = () => {
   );
 
   const handleAddCart = () => {
+    add(product);
     hapticNotification('success');
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);
@@ -47,6 +51,7 @@ export const ProductPage = () => {
 
   return (
     <div className="max-w-screen-xl mx-auto px-4 py-4 pb-24">
+      <BackButton label="Назад" />
       {/* Breadcrumb */}
       <div className="text-xs text-olive-700 mb-4 flex items-center gap-1.5">
         <Link to="/" className="hover:text-olive-400 transition-colors">Главная</Link>
