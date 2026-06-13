@@ -13,15 +13,11 @@ import { TelegramUser } from '../common/decorators/telegram-user.decorator';
 import type { TelegramInitUser } from '../common/telegram/init-data.util';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { PaymentsService } from '../payments/payments.service';
 
 @Controller('orders')
 @UseGuards(TelegramAuthGuard)
 export class OrdersController {
-  constructor(
-    private readonly orders: OrdersService,
-    private readonly payments: PaymentsService,
-  ) {}
+  constructor(private readonly orders: OrdersService) {}
 
   @Post()
   @Throttle({ default: { ttl: 60_000, limit: 10 } })
@@ -39,22 +35,6 @@ export class OrdersController {
     @TelegramUser() user: TelegramInitUser,
     @Param('id', ParseUUIDPipe) id: string,
   ) {
-    const order = await this.orders.findOwned(id, user.id);
-    // Fallback to webhooks: actively verify pending payments via YooKassa API
-    if (order.status === 'AWAITING_PAYMENT') {
-      await this.payments.reconcileOrder(id);
-      return this.orders.findOwned(id, user.id);
-    }
-    return order;
-  }
-
-  /** Step 3 of the flow: create a YooKassa payment for an order. */
-  @Post(':id/payment')
-  @Throttle({ default: { ttl: 60_000, limit: 10 } })
-  createPayment(
-    @TelegramUser() user: TelegramInitUser,
-    @Param('id', ParseUUIDPipe) id: string,
-  ) {
-    return this.payments.createPayment(id, user.id);
+    return this.orders.findOwned(id, user.id);
   }
 }

@@ -1,11 +1,11 @@
 # SkyDefence — Telegram Mini App
 
-B2B-магазин внутри Telegram: каталог, корзина, заказы, онлайн-оплата через ЮKassa, B2B-заявки.
+B2B-магазин внутри Telegram: каталог, корзина, заявки на заказ (оплата — переводом по согласованию с менеджером), B2B-заявки.
 
 | Часть | Стек | Где |
 |---|---|---|
 | Mini App | React 18, TypeScript, Vite, FSD, Zustand, RHF + Zod, Framer Motion | `src/` |
-| API | NestJS, Prisma, PostgreSQL, ЮKassa REST v3 | `backend/` |
+| API | NestJS, Prisma, PostgreSQL, Telegram Bot API | `backend/` |
 | Бот | Node.js (long polling) | `bot.js` |
 | Инфра | Docker Compose, Caddy (TLS), GitHub Actions | `docker-compose*.yml`, `.github/` |
 
@@ -28,4 +28,4 @@ npm install && echo 'VITE_API_URL=http://localhost:3000' > .env.local && npm run
 
 Тесты: `npm test` (фронтенд) и `cd backend && npm test`.
 
-⚠️ Все секреты (токен бота, ключи ЮKassa) — только в `.env`, никогда в коде.
+⚠️ Все секреты (токен бота, chat id менеджера) — только в `.env`, никогда в коде.

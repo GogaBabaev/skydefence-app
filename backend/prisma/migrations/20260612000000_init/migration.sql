@@ -1,8 +1,5 @@
 -- CreateEnum
-CREATE TYPE "OrderStatus" AS ENUM ('PENDING', 'AWAITING_PAYMENT', 'PAID', 'CANCELED', 'FULFILLED');
-
--- CreateEnum
-CREATE TYPE "PaymentStatus" AS ENUM ('PENDING', 'WAITING_FOR_CAPTURE', 'SUCCEEDED', 'CANCELED');
+CREATE TYPE "OrderStatus" AS ENUM ('NEW', 'CONFIRMED', 'CANCELED', 'FULFILLED');
 
 -- CreateEnum
 CREATE TYPE "B2bStatus" AS ENUM ('NEW', 'IN_PROGRESS', 'CLOSED');
@@ -56,7 +53,7 @@ CREATE TABLE "orders" (
     "id" TEXT NOT NULL,
     "number" SERIAL NOT NULL,
     "user_id" BIGINT NOT NULL,
-    "status" "OrderStatus" NOT NULL DEFAULT 'PENDING',
+    "status" "OrderStatus" NOT NULL DEFAULT 'NEW',
     "total_amount" DECIMAL(12,2) NOT NULL,
     "currency" TEXT NOT NULL DEFAULT 'RUB',
     "customer_name" TEXT NOT NULL,
@@ -82,35 +79,6 @@ CREATE TABLE "order_items" (
     "quantity" INTEGER NOT NULL,
 
     CONSTRAINT "order_items_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "payments" (
-    "id" TEXT NOT NULL,
-    "order_id" TEXT NOT NULL,
-    "provider" TEXT NOT NULL DEFAULT 'yookassa',
-    "external_id" TEXT,
-    "status" "PaymentStatus" NOT NULL DEFAULT 'PENDING',
-    "amount" DECIMAL(12,2) NOT NULL,
-    "currency" TEXT NOT NULL DEFAULT 'RUB',
-    "confirmation_url" TEXT,
-    "idempotence_key" TEXT NOT NULL,
-    "raw_payload" JSONB,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "payments_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "webhook_events" (
-    "id" TEXT NOT NULL,
-    "type" TEXT NOT NULL,
-    "payment_external_id" TEXT NOT NULL,
-    "payload" JSONB NOT NULL,
-    "processed_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "webhook_events_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -148,18 +116,6 @@ CREATE INDEX "orders_user_id_idx" ON "orders"("user_id");
 -- CreateIndex
 CREATE INDEX "order_items_order_id_idx" ON "order_items"("order_id");
 
--- CreateIndex
-CREATE UNIQUE INDEX "payments_external_id_key" ON "payments"("external_id");
-
--- CreateIndex
-CREATE UNIQUE INDEX "payments_idempotence_key_key" ON "payments"("idempotence_key");
-
--- CreateIndex
-CREATE INDEX "payments_order_id_idx" ON "payments"("order_id");
-
--- CreateIndex
-CREATE UNIQUE INDEX "webhook_events_type_payment_external_id_key" ON "webhook_events"("type", "payment_external_id");
-
 -- AddForeignKey
 ALTER TABLE "products" ADD CONSTRAINT "products_category_id_fkey" FOREIGN KEY ("category_id") REFERENCES "categories"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
@@ -171,9 +127,6 @@ ALTER TABLE "order_items" ADD CONSTRAINT "order_items_order_id_fkey" FOREIGN KEY
 
 -- AddForeignKey
 ALTER TABLE "order_items" ADD CONSTRAINT "order_items_product_id_fkey" FOREIGN KEY ("product_id") REFERENCES "products"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "payments" ADD CONSTRAINT "payments_order_id_fkey" FOREIGN KEY ("order_id") REFERENCES "orders"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "b2b_requests" ADD CONSTRAINT "b2b_requests_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;

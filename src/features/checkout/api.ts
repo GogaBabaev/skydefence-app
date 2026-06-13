@@ -11,26 +11,15 @@ export interface OrderItemDto {
 export interface OrderDto {
   id: string;
   number: number;
-  status:
-    | 'PENDING'
-    | 'AWAITING_PAYMENT'
-    | 'PAID'
-    | 'CANCELED'
-    | 'FULFILLED';
+  status: 'NEW' | 'CONFIRMED' | 'CANCELED' | 'FULFILLED';
   totalAmount: number;
   currency: string;
   createdAt: string;
   items: OrderItemDto[];
-  lastPayment: { status: string; confirmationUrl: string | null } | null;
 }
 
-export interface PaymentDto {
-  paymentId: string;
-  confirmationUrl: string | null;
-  status: string;
-}
-
-/** Step 2: create order (prices are computed server-side). */
+/** Creates the order (prices are computed server-side) and notifies the
+ * manager in Telegram. Payment is arranged manually afterwards. */
 export function createOrder(
   form: CheckoutForm,
   items: { productId: number; quantity: number }[],
@@ -41,12 +30,6 @@ export function createOrder(
   });
 }
 
-/** Step 3: create YooKassa payment intent → confirmation_url. */
-export function createPayment(orderId: string): Promise<PaymentDto> {
-  return api<PaymentDto>(`/orders/${orderId}/payment`, { method: 'POST' });
-}
-
-/** Step 6-7: poll order status after returning from payment. */
 export function getOrder(orderId: string): Promise<OrderDto> {
   return api<OrderDto>(`/orders/${orderId}`);
 }

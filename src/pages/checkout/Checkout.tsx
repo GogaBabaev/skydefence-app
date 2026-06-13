@@ -3,9 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
-import { CreditCard, Loader2, ShoppingCart } from 'lucide-react';
+import { Send, Loader2, ShoppingCart } from 'lucide-react';
 import { useCart } from '../../features/cart/model/cart.store';
-import { createOrder, createPayment } from '../../features/checkout/api';
+import { createOrder } from '../../features/checkout/api';
 import {
   checkoutSchema,
   type CheckoutForm,
@@ -49,7 +49,8 @@ export const Checkout = () => {
     setSubmitting(true);
     setServerError(null);
     try {
-      // 2. create order — server recomputes all prices
+      // create order — server recomputes all prices and notifies the
+      // manager in Telegram; payment is arranged by manual transfer
       const order = await createOrder(
         form,
         payable.map((i) => ({
@@ -57,17 +58,8 @@ export const Checkout = () => {
           quantity: i.qty,
         })),
       );
-      // 3. create payment intent
-      const payment = await createPayment(order.id);
       clear();
       hapticNotification('success');
-
-      // 4. open YooKassa payment UI
-      if (payment.confirmationUrl) {
-        if (tg) tg.openLink(payment.confirmationUrl);
-        else window.open(payment.confirmationUrl, '_blank');
-      }
-      // 6-7. order status screen polls until webhook confirms
       navigate(`/order/${order.id}`);
     } catch (e) {
       hapticNotification('error');
@@ -82,8 +74,8 @@ export const Checkout = () => {
   // Telegram MainButton drives the form
   useMainButton({
     text: submitting
-      ? 'Создаём заказ…'
-      : `Оплатить ${fmtPrice(totalPrice)}`,
+      ? 'Отправляем заявку…'
+      : `Оформить заявку — ${fmtPrice(totalPrice)}`,
     visible: payable.length > 0,
     disabled: submitting,
     onClick: onSubmit,
@@ -134,7 +126,7 @@ export const Checkout = () => {
 
       {!API_ENABLED && (
         <div className="mb-5 text-xs text-amber-400 bg-amber-400/10 border border-amber-400/20 rounded-lg p-3">
-          Backend не настроен (VITE_API_URL). Онлайн-оплата недоступна.
+          Backend не настроен (VITE_API_URL). Отправка заявки недоступна.
         </div>
       )}
 
@@ -217,14 +209,15 @@ export const Checkout = () => {
           {submitting ? (
             <Loader2 size={16} className="animate-spin" />
           ) : (
-            <CreditCard size={16} />
+            <Send size={16} />
           )}
           <span className="ml-2">
-            Перейти к оплате — {fmtPrice(totalPrice)}
+            Оформить заявку — {fmtPrice(totalPrice)}
           </span>
         </button>
         <p className="text-[10px] text-olive-700 text-center">
-          Оплата проходит через ЮKassa. После оплаты вы вернётесь в приложение.
+          Заявка отправляется менеджеру в Telegram. Он свяжется с вами для
+          подтверждения заказа и оплаты переводом.
         </p>
       </form>
     </motion.div>

@@ -43,6 +43,11 @@ services:
     environment:
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:?set in .env}
       APP_URL: ${APP_URL:?set in .env}
+      API_BASE_URL: http://api:3000
+      ADMIN_API_SECRET: ${ADMIN_API_SECRET:?set in .env}
+      TELEGRAM_MANAGER_CHAT_ID: ${TELEGRAM_MANAGER_CHAT_ID:?set in .env}
+    depends_on:
+      - api
 
   postgres:
     image: postgres:16-alpine

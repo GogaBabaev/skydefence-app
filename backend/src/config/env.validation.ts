@@ -1,6 +1,5 @@
 import { plainToInstance, Transform } from 'class-transformer';
 import {
-  IsBooleanString,
   IsInt,
   IsNotEmpty,
   IsOptional,
@@ -30,19 +29,12 @@ class EnvVars {
 
   @IsString()
   @IsNotEmpty()
-  YOOKASSA_SHOP_ID: string;
+  TELEGRAM_MANAGER_CHAT_ID: string;
 
+  /** Shared secret the bot sends to call /api/admin/orders/:id/status */
   @IsString()
   @IsNotEmpty()
-  YOOKASSA_SECRET_KEY: string;
-
-  @IsString()
-  @IsNotEmpty()
-  YOOKASSA_RETURN_URL: string;
-
-  @IsOptional()
-  @IsBooleanString()
-  YOOKASSA_WEBHOOK_IP_CHECK?: string;
+  ADMIN_API_SECRET: string;
 
   @IsOptional()
   @IsString()

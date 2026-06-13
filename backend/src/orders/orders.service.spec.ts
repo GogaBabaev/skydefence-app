@@ -2,6 +2,7 @@ import { Test } from '@nestjs/testing';
 import { Prisma } from '@prisma/client';
 import { OrdersService } from './orders.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { TelegramNotifyService } from '../notifications/telegram-notify.service';
 
 const dec = (v: string | number) => new Prisma.Decimal(v);
 const tgUser = { id: 777, first_name: 'Misha', username: 'misha' };
@@ -28,6 +29,10 @@ describe('OrdersService', () => {
       providers: [
         OrdersService,
         { provide: PrismaService, useValue: prisma },
+        {
+          provide: TelegramNotifyService,
+          useValue: { notifyManager: jest.fn().mockResolvedValue(undefined) },
+        },
       ],
     }).compile();
     service = moduleRef.get(OrdersService);
@@ -106,7 +111,6 @@ describe('OrdersService', () => {
       id: 'o1',
       userId: BigInt(123),
       items: [],
-      payments: [],
     });
     await expect(service.findOwned('o1', 777)).rejects.toThrow(
       'Not your order',

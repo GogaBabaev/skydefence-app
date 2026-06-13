@@ -6,7 +6,6 @@ import { validateEnv } from './config/env.validation';
 import { PrismaModule } from './prisma/prisma.module';
 import { ProductsModule } from './products/products.module';
 import { OrdersModule } from './orders/orders.module';
-import { PaymentsModule } from './payments/payments.module';
 import { B2bModule } from './b2b/b2b.module';
 import { HealthController } from './health/health.controller';
 
@@ -20,7 +19,6 @@ import { HealthController } from './health/health.controller';
     PrismaModule,
     ProductsModule,
     OrdersModule,
-    PaymentsModule,
     B2bModule,
   ],
   controllers: [HealthController],

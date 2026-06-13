@@ -134,7 +134,8 @@ export const Cart = () => {
               <span className="ml-2">Перейти к оформлению</span>
             </button>
             <p className="mt-3 text-[10px] text-olive-700 text-center">
-              Онлайн-оплата через ЮKassa. Менеджер уточнит стоимость доставки.
+              Заявка отправляется менеджеру в Telegram. Оплата — переводом,
+              менеджер уточнит стоимость доставки.
             </p>
           </div>
         </div>

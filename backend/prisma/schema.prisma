@@ -59,9 +59,8 @@ model Product {
 
 // ── Orders ─────────────────────────────────────────────────────────
 enum OrderStatus {
-  PENDING // created, no payment attempt yet
-  AWAITING_PAYMENT // payment created in YooKassa
-  PAID
+  NEW // submitted, manager notified — payment by bank transfer arranged manually
+  CONFIRMED // manager confirmed the order/payment
   CANCELED
   FULFILLED
 }
@@ -71,7 +70,7 @@ model Order {
   number          Int         @unique @default(autoincrement())
   userId          BigInt      @map("user_id")
   user            User        @relation(fields: [userId], references: [id])
-  status          OrderStatus @default(PENDING)
+  status          OrderStatus @default(NEW)
   totalAmount     Decimal     @map("total_amount") @db.Decimal(12, 2)
   currency        String      @default("RUB")
   customerName    String      @map("customer_name")
@@ -84,7 +83,6 @@ model Order {
   createdAt       DateTime    @default(now()) @map("created_at")
   updatedAt       DateTime    @updatedAt @map("updated_at")
   items           OrderItem[]
-  payments        Payment[]
 
   @@index([userId])
   @@map("orders")
@@ -103,46 +101,6 @@ model OrderItem {
 
   @@index([orderId])
   @@map("order_items")
-}
-
-// ── Payments ───────────────────────────────────────────────────────
-enum PaymentStatus {
-  PENDING
-  WAITING_FOR_CAPTURE
-  SUCCEEDED
-  CANCELED
-}
-
-model Payment {
-  id              String        @id @default(uuid())
-  orderId         String        @map("order_id")
-  order           Order         @relation(fields: [orderId], references: [id])
-  provider        String        @default("yookassa")
-  /// YooKassa payment id
-  externalId      String?       @unique @map("external_id")
-  status          PaymentStatus @default(PENDING)
-  amount          Decimal       @db.Decimal(12, 2)
-  currency        String        @default("RUB")
-  confirmationUrl String?       @map("confirmation_url")
-  idempotenceKey  String        @unique @map("idempotence_key")
-  rawPayload      Json?         @map("raw_payload")
-  createdAt       DateTime      @default(now()) @map("created_at")
-  updatedAt       DateTime      @updatedAt @map("updated_at")
-
-  @@index([orderId])
-  @@map("payments")
-}
-
-/// Webhook audit + idempotency
-model WebhookEvent {
-  id                String   @id @default(uuid())
-  type              String
-  paymentExternalId String   @map("payment_external_id")
-  payload           Json
-  processedAt       DateTime @default(now()) @map("processed_at")
-
-  @@unique([type, paymentExternalId])
-  @@map("webhook_events")
 }
 
 // ── B2B requests ───────────────────────────────────────────────────

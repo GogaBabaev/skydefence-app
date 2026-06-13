@@ -2,7 +2,7 @@
   "name": "skydefence-api",
   "version": "1.0.0",
   "private": true,
-  "description": "SkyDefence Telegram Mini App backend: catalog, orders, YooKassa payments",
+  "description": "SkyDefence Telegram Mini App backend: catalog, orders, Telegram order requests",
   "scripts": {
     "build": "nest build",
     "start": "node dist/main.js",

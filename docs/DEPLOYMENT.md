@@ -3,14 +3,14 @@
 ## 0. Предварительно
 
 1. **Отзовите старый токен бота** — он был захардкожен в `bot.js` и попал в git-историю. В @BotFather: `/revoke` → получите новый токен.
-2. Зарегистрируйте магазин в [ЮKassa](https://yookassa.ru), получите `shopId` и секретный ключ (сначала тестовый `test_...`).
+2. Узнайте chat id менеджера/группы, куда бот будет слать заявки на заказ (например, через `@userinfobot` или `getUpdates`).
 3. Купите VPS (2 vCPU / 2 GB достаточно) и домен; направьте A-запись домена на IP сервера.
 
 ## 1. Локальная разработка
 
 ```bash
 # Backend + PostgreSQL
-cp backend/.env.example backend/.env        # заполните токен бота и ключи ЮKassa
+cp backend/.env.example backend/.env        # заполните токен бота и chat id менеджера
 docker compose up -d postgres
 cd backend
 npm install
@@ -26,8 +26,6 @@ npm run dev
 
 Тесты: `cd backend && npm test` и `npm test` в корне.
 
-Для проверки webhooks локально используйте туннель (например, `ssh -R`/cloudpub) и временно `YOOKASSA_WEBHOOK_IP_CHECK=false`.
-
 ## 2. Production (VPS)
 
 ```bash
@@ -37,7 +35,7 @@ mkdir -p /opt/skydefence && cd /opt/skydefence
 git clone <ваш-репозиторий> .
 
 cp backend/.env.production.example backend/.env.production
-nano backend/.env.production                # реальные ключи ЮKassa, токен бота, домен
+nano backend/.env.production                # токен бота, chat id менеджера, домен
 
 cat > .env <<'EOF'
 POSTGRES_PASSWORD=<сгенерируйте: openssl rand -hex 24>
@@ -53,12 +51,12 @@ docker compose -f docker-compose.prod.yml exec api npm run seed
 
 Caddy сам получит TLS-сертификат. Проверка: `curl https://<домен>/api/health`.
 
-## 3. Настройка Telegram и ЮKassa
+## 3. Настройка Telegram
 
 1. @BotFather → `/newapp` (или Bot Settings → Menu Button) → URL Mini App: `https://<домен>/`.
-2. ЮKassa → Интеграция → HTTP-уведомления: URL `https://<домен>/api/payments/yookassa/webhook`, события `payment.succeeded` и `payment.canceled`.
-3. Тестовый платёж: тестовый магазин ЮKassa, карта `5555 5555 5555 4477`, любые CVC/срок. Заказ должен перейти в PAID, Mini App покажет success-экран.
-4. После проверки замените тестовые ключи боевыми в `backend/.env.production` и перезапустите: `docker compose -f docker-compose.prod.yml up -d api`.
+2. Укажите `TELEGRAM_MANAGER_CHAT_ID` в `backend/.env.production` — id чата/группы менеджера, куда бот шлёт заявки.
+3. Тестовый заказ: оформите заявку в Mini App — в чат менеджера должно прийти сообщение со сводкой заказа и контактами клиента. Mini App покажет экран «Заявка отправлена».
+4. После проверки перезапустите API при изменении env: `docker compose -f docker-compose.prod.yml up -d api`.
 
 ## 4. CI/CD
 
@@ -74,8 +72,7 @@ Caddy сам получит TLS-сертификат. Проверка: `curl ht
 ## Чек-лист безопасности перед боевым запуском
 
 - [ ] Старый токен бота отозван, новый только в env
-- [ ] `YOOKASSA_WEBHOOK_IP_CHECK=true`
+- [ ] `TELEGRAM_MANAGER_CHAT_ID` указывает на правильный чат менеджера
 - [ ] `CORS_ORIGINS` — только ваш домен
-- [ ] Боевые ключи ЮKassa, `vat_code` в receipt соответствует вашей системе налогообложения (`backend/src/payments/yookassa.client.ts`)
 - [ ] Бэкапы PostgreSQL настроены
 - [ ] SSH на сервере — только по ключам
