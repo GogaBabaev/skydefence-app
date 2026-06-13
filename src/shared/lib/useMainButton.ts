@@ -4,6 +4,7 @@ interface MainButtonOptions {
   text: string;
   visible: boolean;
   disabled?: boolean;
+  loading?: boolean;
   onClick: () => void;
 }
 
@@ -15,6 +16,7 @@ export function useMainButton({
   text,
   visible,
   disabled,
+  loading,
   onClick,
 }: MainButtonOptions) {
   useEffect(() => {
@@ -26,11 +28,14 @@ export function useMainButton({
     else mb.hide();
     if (disabled) mb.disable();
     else mb.enable();
+    if (loading) mb.showProgress(false);
+    else mb.hideProgress();
     mb.onClick(onClick);
 
     return () => {
       mb.offClick(onClick);
+      mb.hideProgress();
       mb.hide();
     };
-  }, [text, visible, disabled, onClick]);
+  }, [text, visible, disabled, loading, onClick]);
 }

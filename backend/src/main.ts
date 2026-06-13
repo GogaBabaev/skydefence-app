@@ -2,6 +2,7 @@ import { ValidationPipe, Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
+import { AllExceptionsFilter } from './common/filters/http-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -11,6 +12,7 @@ async function bootstrap() {
 
   app.use(helmet());
   app.setGlobalPrefix('api');
+  app.useGlobalFilters(new AllExceptionsFilter());
 
   const origins = (process.env.CORS_ORIGINS ?? '')
     .split(',')

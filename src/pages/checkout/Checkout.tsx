@@ -78,6 +78,7 @@ export const Checkout = () => {
       : `Оформить заявку — ${fmtPrice(totalPrice)}`,
     visible: payable.length > 0,
     disabled: submitting,
+    loading: submitting,
     onClick: onSubmit,
   });
 

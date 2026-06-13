@@ -65,7 +65,7 @@ Caddy сам получит TLS-сертификат. Проверка: `curl ht
 ## 5. Эксплуатация
 
 - Логи: `docker compose -f docker-compose.prod.yml logs -f api`
-- Бэкап БД: `docker compose -f docker-compose.prod.yml exec postgres pg_dump -U skydefence skydefence > backup_$(date +%F).sql` (поставьте в cron)
+- Бэкап БД: настраивается автоматически скриптом `deploy/setup.sh` — ежедневно в 03:00 cron делает `pg_dump` в `/var/backups/skydefence/db_YYYYMMDD_HHMM.sql.gz`, в 03:30 удаляются файлы старше 30 дней. Проверить: `crontab -l` и `ls /var/backups/skydefence`.
 - Миграции при обновлении схемы: выполняются автоматически при старте контейнера api (`prisma migrate deploy`)
 - Обновление каталога: правьте `backend/prisma/catalog.json` → `npm run seed` (upsert, безопасно)
 

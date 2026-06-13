@@ -53,6 +53,15 @@ echo "→ Ожидание API…"
 sleep 15
 docker compose -f docker-compose.prod.yml exec -T api npm run seed || true
 
+echo "→ Настройка ежедневного бэкапа БД (cron, 03:00, хранение 30 дней)…"
+mkdir -p /var/backups/skydefence
+(crontab -l 2>/dev/null | grep -v 'skydefence/db_'; echo "0 3 * * * docker compose \
+-f /opt/skydefence/docker-compose.prod.yml exec -T postgres \
+pg_dump -U skydefence skydefence | gzip \
+> /var/backups/skydefence/db_\$(date +\%Y\%m\%d_\%H\%M).sql.gz") | crontab -
+(crontab -l 2>/dev/null | grep -v 'skydefence -name'; echo "30 3 * * * find \
+/var/backups/skydefence -name '*.sql.gz' -mtime +30 -delete") | crontab -
+
 echo ""
 echo "══════════════════════════════════════════════════════"
 echo "✅ Готово. Проверка: curl https://${DOMAIN}/api/health"

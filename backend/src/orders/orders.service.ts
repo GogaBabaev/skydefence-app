@@ -137,6 +137,15 @@ export class OrdersService {
       where: { id: orderId },
       data: { status },
     });
+
+    // Notify the customer in their own Telegram chat. order.userId IS the
+    // customer's Telegram user id — best-effort, never blocks the response.
+    try {
+      void this.notify.notifyUser(updated.userId, updated.number, status);
+    } catch {
+      // notification is best-effort and must never break status updates
+    }
+
     return { id: updated.id, number: updated.number, status: updated.status };
   }
 

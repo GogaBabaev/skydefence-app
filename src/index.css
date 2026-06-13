@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --tg-safe-area-inset-top: env(safe-area-inset-top, 0px);
+  --tg-safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+#root {
+  padding-top: var(--tg-safe-area-inset-top);
+  padding-bottom: var(--tg-safe-area-inset-bottom);
+}
+
 @layer base {
   html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
   body {

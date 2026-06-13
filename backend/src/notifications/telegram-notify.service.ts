@@ -51,4 +51,45 @@ export class TelegramNotifyService {
       );
     }
   }
+
+  /**
+   * Notifies the customer in their own Telegram chat when the manager
+   * changes the order status. Best-effort — never throws.
+   */
+  async notifyUser(
+    telegramId: bigint | number,
+    orderNumber: number,
+    status: 'CONFIRMED' | 'FULFILLED' | 'CANCELED',
+  ): Promise<void> {
+    const messages: Record<string, string> = {
+      CONFIRMED: `✅ Заказ №${orderNumber} подтверждён. Менеджер свяжется с вами для согласования оплаты.`,
+      FULFILLED: `📦 Заказ №${orderNumber} выполнен. Спасибо за покупку!`,
+      CANCELED: `❌ Заказ №${orderNumber} отменён. Свяжитесь с менеджером для уточнения.`,
+    };
+    const text = messages[status];
+    if (!text) return;
+
+    const token = this.config.get<string>('TELEGRAM_BOT_TOKEN');
+    if (!token) return;
+
+    try {
+      const res = await fetch(
+        `https://api.telegram.org/bot${token}/sendMessage`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ chat_id: Number(telegramId), text }),
+        },
+      );
+      if (!res.ok) {
+        this.logger.warn(
+          `Telegram user notify failed: ${res.status} ${await res.text()}`,
+        );
+      }
+    } catch (e) {
+      this.logger.warn(
+        `Telegram user notify error: ${e instanceof Error ? e.message : e}`,
+      );
+    }
+  }
 }
