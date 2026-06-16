@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Phone, ShoppingCart, ChevronDown, Search, Sun, Moon, User } from 'lucide-react';
 import { categories } from '../../entities/product/data/catalog.static';
@@ -17,9 +17,17 @@ const navLinks = [
 export const Navbar = () => {
   const [menuOpen, setMenuOpen]       = useState(false);
   const [catalogOpen, setCatalogOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const { pathname } = useLocation();
   const { totalCount } = useCart();
   const { theme, toggle } = useTheme();
+  const navigate = useNavigate();
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const q = searchQuery.trim();
+    if (q) { navigate(`/catalog?search=${encodeURIComponent(q)}`); setMenuOpen(false); }
+  };
 
   return (
     <>
@@ -100,16 +108,18 @@ export const Navbar = () => {
           </div>
 
           {/* Search bar */}
-          <div className="flex-1 hidden md:block max-w-sm">
+          <form onSubmit={handleSearch} className="flex-1 hidden md:block max-w-sm">
             <div className="relative">
               <input
                 type="text"
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
                 placeholder="Поиск товаров..."
                 className="w-full bg-dark border border-dark-border rounded-lg pl-9 pr-3 py-2 text-sm text-olive-200 placeholder-olive-700 focus:outline-none focus:border-olive-500 transition-colors"
               />
               <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-olive-600" />
             </div>
-          </div>
+          </form>
 
           {/* Desktop nav links */}
           <nav className="hidden md:flex items-center gap-4 ml-auto text-sm">
@@ -178,14 +188,16 @@ export const Navbar = () => {
           >
             <div className="px-4 py-3">
               {/* Search */}
-              <div className="relative mb-3">
+              <form onSubmit={handleSearch} className="relative mb-3">
                 <input
                   type="text"
+                  value={searchQuery}
+                  onChange={e => setSearchQuery(e.target.value)}
                   placeholder="Поиск товаров..."
                   className="w-full bg-dark border border-dark-border rounded-lg pl-9 pr-3 py-2.5 text-sm text-olive-200 placeholder-olive-700 focus:outline-none"
                 />
                 <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-olive-600" />
-              </div>
+              </form>
 
               {/* Categories */}
               <div className="mb-3">

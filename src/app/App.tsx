@@ -18,6 +18,8 @@ import { Garantiya } from '../pages/Garantiya';
 import { Rekvizity } from '../pages/Rekvizity';
 import { Blog } from '../pages/Blog';
 import { Account } from '../pages/Account';
+import { Politika } from '../pages/Politika';
+import { Oferta } from '../pages/Oferta';
 import '../index.css';
 
 /* ─── Theme context ────────────────────────────────────────────── */
@@ -80,8 +82,8 @@ const AnimatedRoutes = () => {
         <Route path="/oplata"      element={<Fade><StubPage title="Оплата" /></Fade>} />
         <Route path="/otzyvy"      element={<Fade><StubPage title="Отзывы" /></Fade>} />
         <Route path="/sertifikaty" element={<Fade><StubPage title="Сертификаты" /></Fade>} />
-        <Route path="/politika"    element={<Fade><StubPage title="Политика конфиденциальности" /></Fade>} />
-        <Route path="/oferta"      element={<Fade><StubPage title="Публичная оферта" /></Fade>} />
+        <Route path="/politika"    element={<Fade><Politika /></Fade>} />
+        <Route path="/oferta"      element={<Fade><Oferta /></Fade>} />
         <Route path="*"            element={<Fade><StubPage title="Страница не найдена" /></Fade>} />
       </Routes>
     </AnimatePresence>

@@ -10,16 +10,22 @@ export const Catalog = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [sortBy, setSortBy] = useState<'default'|'price_asc'|'price_desc'>('default');
   const catSlug = searchParams.get('cat') || 'all';
+  const searchQuery = searchParams.get('search') || '';
 
   const setCategory = (slug: string) => {
     if (slug === 'all') searchParams.delete('cat');
     else searchParams.set('cat', slug);
+    searchParams.delete('search');
     setSearchParams(searchParams);
   };
 
   // catalog comes from the backend API (static bundle as offline fallback)
   const { products } = useProducts(catSlug);
   let items = products;
+  if (searchQuery) {
+    const q = searchQuery.toLowerCase();
+    items = items.filter(p => p.name.toLowerCase().includes(q) || p.shortDesc?.toLowerCase().includes(q));
+  }
   if (sortBy === 'price_asc')  items = [...items].sort((a,b) => (a.price ?? 999999) - (b.price ?? 999999));
   if (sortBy === 'price_desc') items = [...items].sort((a,b) => (b.price ?? 0) - (a.price ?? 0));
 
@@ -34,7 +40,7 @@ export const Catalog = () => {
       </div>
 
       <h1 className="section-title mb-5">
-        {currentCat ? currentCat.label : 'Весь каталог'}
+        {searchQuery ? `Поиск: ${searchQuery}` : currentCat ? currentCat.label : 'Весь каталог'}
         <span className="ml-2 text-sm font-normal text-olive-600 normal-case">({items.length} {declOfNum(items.length, ['товар','товара','товаров'])})</span>
       </h1>
 
