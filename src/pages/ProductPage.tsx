@@ -6,6 +6,7 @@ import { useProduct } from '../entities/product/api';
 import { useCart } from '../features/cart/model/cart.store';
 import { useTelegram } from '../shared/lib/useTelegram';
 import { BackButton } from '../shared/ui/BackButton';
+import { api } from '../shared/api/http';
 
 const fmtPrice = (p: number) => p.toLocaleString('ru-RU') + ' ₽';
 
@@ -14,10 +15,12 @@ export const ProductPage = () => {
   const navigate  = useNavigate();
   const { showBackButton, hideBackButton, hapticNotification } = useTelegram();
   const [imgIdx, setImgIdx]     = useState(0);
-  const [showForm, setShowForm] = useState(false);
+  const [showForm, setShowForm]   = useState(false);
   const [submitted, setSubmitted] = useState(false);
-  const [form, setForm]         = useState({ name: '', phone: '' });
-  const [added, setAdded]       = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [form, setForm]           = useState({ name: '', phone: '' });
+  const [added, setAdded]         = useState(false);
 
   const product = useProduct(slug);
   const { add } = useCart();
@@ -42,11 +45,30 @@ export const ProductPage = () => {
     setTimeout(() => setAdded(false), 2000);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    hapticNotification('success');
-    setSubmitted(true);
-    setTimeout(() => { setShowForm(false); setSubmitted(false); }, 3000);
+    setSubmitting(true);
+    setSubmitError(null);
+    try {
+      await api('/b2b-requests', {
+        method: 'POST',
+        body: {
+          company: 'Физическое лицо',
+          contactName: form.name,
+          phone: form.phone,
+          productSlug: product.slug,
+          message: `Запрос цены на товар: ${product.name}`,
+        },
+      });
+      hapticNotification('success');
+      setSubmitted(true);
+      setTimeout(() => { setShowForm(false); setSubmitted(false); }, 3000);
+    } catch {
+      hapticNotification('error');
+      setSubmitError('Не удалось отправить. Позвоните: +7 (495) 136-5777');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -239,7 +261,10 @@ export const ProductPage = () => {
                   <input type="tel" required placeholder="Номер телефона" value={form.phone}
                     onChange={e => setForm({...form, phone: e.target.value})}
                     className="w-full bg-dark border border-dark-border rounded-lg px-3 py-2.5 text-sm text-olive-200 placeholder-olive-700 focus:outline-none focus:border-olive-500 transition-colors" />
-                  <button type="submit" className="w-full btn-primary py-3 justify-center">Оставить заявку</button>
+                  <button type="submit" disabled={submitting} className="w-full btn-primary py-3 justify-center disabled:opacity-60">
+                    {submitting ? 'Отправка…' : 'Оставить заявку'}
+                  </button>
+                  {submitError && <p className="text-xs text-red-400 text-center">{submitError}</p>}
                   <p className="text-[10px] text-olive-700 text-center">Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности</p>
                 </form>
               )}

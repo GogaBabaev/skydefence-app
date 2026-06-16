@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { api } from '../shared/api/http';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowRight, ChevronDown, Phone, Shield, Truck,
@@ -488,13 +489,32 @@ export const Home = () => {
 
 /* ─── Inline callback form component ──────────────────────────── */
 const CallbackForm = () => {
-  const [sent, setSent]   = useState(false);
-  const [name, setName]   = useState('');
-  const [phone, setPhone] = useState('');
+  const [sent, setSent]       = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError]     = useState<string | null>(null);
+  const [name, setName]       = useState('');
+  const [phone, setPhone]     = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSent(true);
+    setLoading(true);
+    setError(null);
+    try {
+      await api('/b2b-requests', {
+        method: 'POST',
+        body: {
+          company: 'Физическое лицо',
+          contactName: name,
+          phone,
+          message: 'Запрос обратного звонка с главной страницы',
+        },
+      });
+      setSent(true);
+    } catch {
+      setError('Не удалось отправить заявку. Позвоните нам: +7 (495) 136-5777');
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (sent) {
@@ -518,9 +538,10 @@ const CallbackForm = () => {
         onChange={e => setPhone(e.target.value)}
         className="bg-dark border border-dark-border rounded-lg px-3 py-2.5 text-sm text-olive-200 placeholder-olive-700 focus:outline-none focus:border-olive-500 transition-colors min-w-0 sm:w-44"
       />
-      <button type="submit" className="btn-primary whitespace-nowrap">
-        Оставить заявку
+      <button type="submit" disabled={loading} className="btn-primary whitespace-nowrap disabled:opacity-60">
+        {loading ? 'Отправка…' : 'Оставить заявку'}
       </button>
+      {error && <p className="text-xs text-red-400 mt-1 sm:mt-0 sm:self-center">{error}</p>}
     </form>
   );
 };

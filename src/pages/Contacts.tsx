@@ -3,20 +3,37 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Phone, Mail, Clock, MapPin, CheckCircle, Send, ExternalLink } from 'lucide-react';
 import { useTelegram } from '../shared/lib/useTelegram';
+import { api } from '../shared/api/http';
 
 export const Contacts = () => {
   const { hapticNotification } = useTelegram();
-  const [form, setForm]   = useState({ name: '', phone: '', message: '' });
-  const [sent, setSent]   = useState(false);
+  const [form, setForm]     = useState({ name: '', phone: '', message: '' });
+  const [sent, setSent]     = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError]   = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    await new Promise(r => setTimeout(r, 1000));
-    hapticNotification('success');
-    setSent(true);
-    setLoading(false);
+    setError(null);
+    try {
+      await api('/b2b-requests', {
+        method: 'POST',
+        body: {
+          company: 'Физическое лицо',
+          contactName: form.name,
+          phone: form.phone,
+          message: form.message || 'Запрос из формы контактов',
+        },
+      });
+      hapticNotification('success');
+      setSent(true);
+    } catch {
+      hapticNotification('error');
+      setError('Не удалось отправить. Позвоните нам: +7 (495) 136-5777');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -157,6 +174,7 @@ export const Contacts = () => {
                   </span>
                 ) : 'Оставить заявку'}
               </button>
+              {error && <p className="text-xs text-red-400 text-center">{error}</p>}
               <p className="text-[10px] text-olive-700 text-center">
                 Нажимая кнопку, вы соглашаетесь с{' '}
                 <Link to="/politika" className="hover:text-olive-500 underline">политикой обработки данных</Link>
