@@ -149,6 +149,15 @@ export class OrdersService {
     return { id: updated.id, number: updated.number, status: updated.status };
   }
 
+  async findAll() {
+    const orders = await this.prisma.order.findMany({
+      include: { items: true },
+      orderBy: { createdAt: 'desc' },
+      take: 200,
+    });
+    return orders.map((o: OrderRow) => this.toDto(o));
+  }
+
   async findOwned(orderId: string, tgUserId: number) {
     const order = await this.prisma.order.findUnique({
       where: { id: orderId },
@@ -178,6 +187,10 @@ export class OrdersService {
       status: order.status,
       totalAmount: Number(order.totalAmount),
       currency: order.currency,
+      customerName: order.customerName,
+      customerPhone: order.customerPhone,
+      deliveryAddress: order.deliveryAddress,
+      comment: order.comment,
       createdAt: order.createdAt,
       items: order.items.map((i) => ({
         productId: i.productId,

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Param,
   ParseUUIDPipe,
   Patch,
@@ -21,6 +22,11 @@ import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
 @SkipThrottle()
 export class AdminOrdersController {
   constructor(private readonly orders: OrdersService) {}
+
+  @Get()
+  findAll() {
+    return this.orders.findAll();
+  }
 
   @Patch(':id/status')
   setStatus(
