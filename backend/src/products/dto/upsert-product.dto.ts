@@ -43,8 +43,14 @@ export class UpsertProductDto {
   @Transform(({ value }) => (typeof value === 'string' ? JSON.parse(value) : value))
   gallery: string[];
 
+  @IsArray()
   @Transform(({ value }) => (typeof value === 'string' ? JSON.parse(value) : value))
   specs: { label: string; value: string }[];
+
+  // Optional "advantages/features" block: { title, items }. null = remove the block.
+  @IsOptional()
+  @Transform(({ value }) => (typeof value === 'string' ? JSON.parse(value) : value))
+  features?: { title: string; items: string[] } | null;
 
   @IsOptional()
   @IsBoolean()

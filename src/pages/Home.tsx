@@ -1,53 +1,18 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../shared/api/http';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
   ArrowRight, ChevronDown, Phone, Shield, Truck,
   HeadphonesIcon, Award, Zap, Package, Clock,
   Radio, Target, Cpu, Backpack, MapPin, Star,
 } from 'lucide-react';
-import { products, categories } from '../entities/product/data/catalog.static';
+import { useCategories, useProducts } from '../entities/product/api';
 import { ProductCard } from '../entities/product/ui/ProductCard';
 
 const SD = 'https://skydefence.ru/wa-data/public/shop/products';
 
 const fmtPrice = (p: number) => p.toLocaleString('ru-RU') + ' ₽';
-
-/* ─── Hero slides ─────────────────────────────────────────────── */
-const heroSlides = [
-  {
-    badge: 'Хит продаж',
-    title: 'БУЛАТ V.4',
-    subtitle: 'Всенаправленный детектор дронов',
-    desc: 'Обнаружение БПЛА на расстоянии до 3 000 м. Пассивная система, 360°, автономность 8–12 часов.',
-    price: 109900,
-    slug: 'detektor-bulat-v4',
-    img: `${SD}/11/01/111/images/460/460.970.png`,
-    accent: '#47612e',
-  },
-  {
-    badge: 'Новинка',
-    title: 'ГАРПИЯ 120W',
-    subtitle: 'Блокиратор дронов 6 каналов',
-    desc: '120 Вт мощности, дальность подавления до 2 км. Блокирует GPS, 2.4/5.8 ГГц, 433/868 МГц.',
-    price: null,
-    slug: 'garpiya-120w',
-    img: `${SD}/22/00/22/images/131/131.970.png`,
-    accent: '#c8a84b',
-  },
-  {
-    badge: 'Акция',
-    title: 'DJI Mavic 3 Classic RC',
-    subtitle: 'Профессиональный квадрокоптер',
-    desc: 'Камера Hasselblad 4/3 CMOS, полёт 46 мин, дальность 15 км. Скидка 20 000 ₽.',
-    price: 175000,
-    oldPrice: 195000,
-    slug: 'dji-mavic-3-classic-rc',
-    img: `${SD}/02/00/2/images/13/13.970.png`,
-    accent: '#47612e',
-  },
-];
 
 /* ─── Category cards ──────────────────────────────────────────── */
 const catCards = [
@@ -92,13 +57,13 @@ const promos = [
 const deliveryOptions = [
   { icon: Package, title: 'СДЭК',             sub: '1–5 дней по всей России'      },
   { icon: Truck,   title: 'Транспортные компании', sub: 'Крупногабаритный груз'   },
-  { icon: MapPin,  title: 'Самовывоз',         sub: 'Москва, офис на Тверской'    },
+  { icon: MapPin,  title: 'Самовывоз',         sub: 'Москва, Багратионовский пр-д, 7/2' },
   { icon: Clock,   title: 'Срочная доставка',  sub: 'По Москве — день в день'     },
 ];
 
 /* ─── FAQ ─────────────────────────────────────────────────────── */
 const faqItems = [
-  { q: 'Нужна ли лицензия на подавители БПЛА?',  a: 'Для юридических лиц и силовых структур — да. Для частных покупок ряда моделей — нет. Наши менеджеры проконсультируют по конкретной модели.' },
+  { q: 'Каков порядок приобретения подавителей БПЛА?',  a: 'Порядок продажи и применения такого оборудования регулируется законодательством РФ и зависит от конкретной модели и статуса покупателя. Менеджер проконсультирует по условиям поставки под вашу задачу.' },
   { q: 'Как оформить корпоративный заказ?',       a: 'Отправьте запрос через форму или позвоните. Выставим счёт, подготовим договор и закрывающие документы.' },
   { q: 'Есть ли доставка в регионы?',             a: 'Да, доставляем СДЭК, Почтой России и транспортными компаниями по всей РФ и в ряд стран СНГ.' },
   { q: 'Какие дроны DJI есть в наличии?',         a: 'В наличии Mavic 3, Mini 4K, Agras, Matrice и аксессуары к ним. Актуальный список — в каталоге.' },
@@ -114,112 +79,44 @@ const stats = [
 
 /* ════════════════════════════════════════════════════════════════ */
 export const Home = () => {
-  const [slide, setSlide]   = useState(0);
   const [activeFaq, setFaq] = useState<number | null>(null);
-  const featured             = products.filter(p => p.badge === 'hit' || p.badge === 'sale').slice(0, 4);
-  const allFeatured          = products.slice(0, 8);
-  const cur                  = heroSlides[slide];
+  const { products: apiProducts } = useProducts();
+  const allFeatured          = apiProducts.slice(0, 8);
 
-  /* Auto-advance hero */
-  useEffect(() => {
-    const t = setInterval(() => setSlide(s => (s + 1) % heroSlides.length), 5000);
-    return () => clearInterval(t);
-  }, []);
+  // Live product counts per category (from backend); falls back to static.
+  const liveCategories = useCategories();
+  const countBySlug = Object.fromEntries(liveCategories.map(c => [c.slug, c.count]));
 
   return (
     <div className="overflow-x-hidden">
 
-      {/* ══ HERO BANNER ══════════════════════════════════════════ */}
-      <section className="relative overflow-hidden always-dark" style={{ minHeight: 480 }}>
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={slide}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-            className="absolute inset-0"
-          >
-            {/* Background product image */}
-            <div
-              className="absolute right-0 top-0 bottom-0 w-full md:w-1/2 bg-no-repeat bg-center bg-contain opacity-20 md:opacity-40"
-              style={{ backgroundImage: `url(${cur.img})`, backgroundPosition: 'right center' }}
-            />
-            {/* Gradient overlay */}
-            <div className="absolute inset-0 bg-gradient-to-r from-dark via-dark/90 to-transparent" />
-            <div className="absolute inset-0 bg-military-pattern opacity-30" />
-          </motion.div>
-        </AnimatePresence>
-
-        <div className="relative max-w-screen-xl mx-auto px-4 py-16 md:py-24 flex">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={slide}
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 30 }}
-              transition={{ duration: 0.4 }}
-              className="max-w-lg"
-            >
-              <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-olive-400 bg-olive-500/10 border border-olive-500/20 rounded-full px-3 py-1 mb-4">
-                {cur.badge}
-              </span>
-              <h1 className="text-4xl md:text-6xl font-black text-white leading-none mb-1">
-                {cur.title}
-              </h1>
-              <p className="text-sm font-semibold text-olive-400 uppercase tracking-wider mb-3">
-                {cur.subtitle}
-              </p>
-              <p className="text-sm text-olive-500 leading-relaxed mb-6 max-w-sm">
-                {cur.desc}
-              </p>
-
-              <div className="flex flex-wrap items-center gap-3">
-                {cur.price ? (
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-2xl font-black text-white">{fmtPrice(cur.price)}</span>
-                    {cur.oldPrice && (
-                      <span className="text-sm line-through text-olive-700">{fmtPrice(cur.oldPrice)}</span>
-                    )}
-                  </div>
-                ) : (
-                  <span className="text-lg font-semibold text-olive-400">Цена по запросу</span>
-                )}
-                <Link to={`/product/${cur.slug}`} className="btn-primary">
-                  Подробнее <ArrowRight size={14} />
-                </Link>
-                <Link to="/contacts" className="btn-outline">Получить КП</Link>
-              </div>
-            </motion.div>
-          </AnimatePresence>
-
-          {/* Product image (desktop) */}
-          <div className="hidden md:flex flex-1 items-center justify-end">
-            <AnimatePresence mode="wait">
-              <motion.img
-                key={slide}
-                src={cur.img}
-                alt={cur.title}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 1.05 }}
-                transition={{ duration: 0.5 }}
-                className="w-72 h-72 object-contain drop-shadow-2xl"
-                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-              />
-            </AnimatePresence>
+      {/* ══ HERO ═════════════════════════════════════════════════ */}
+      <section className="relative bg-gradient-to-br from-[#0d1a07] via-dark to-[#0f1509] overflow-hidden always-dark">
+        <div className="absolute inset-0 opacity-5"
+          style={{ backgroundImage: 'repeating-linear-gradient(45deg, #47612e 0, #47612e 1px, transparent 0, transparent 50%)', backgroundSize: '14px 14px' }} />
+        <div className="relative max-w-screen-xl mx-auto px-4 py-16 md:py-24">
+          <div className="max-w-2xl">
+            <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-olive-400 bg-olive-500/10 border border-olive-500/20 rounded-full px-3 py-1.5 mb-5">
+              ☆ Официальный поставщик профессионального оборудования
+            </span>
+            <h1 className="text-3xl md:text-5xl font-black text-white leading-tight mb-4">
+              Профессиональное<br />
+              <span className="text-olive-400">военное снаряжение</span><br />
+              и БПЛА-оборудование
+            </h1>
+            <p className="text-sm text-olive-500 leading-relaxed mb-7 max-w-xl">
+              Детекторы и подавители БПЛА, квадрокоптеры DJI, тактическое снаряжение,
+              электростанции и системы РЭБ. Москва. Доставка по России.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <Link to="/catalog" className="btn-primary px-6 py-2.5 text-sm">
+                Смотреть каталог
+              </Link>
+              <Link to="/b2b" className="btn-outline px-6 py-2.5 text-sm">
+                B2B / Оптовые заявки
+              </Link>
+            </div>
           </div>
-        </div>
-
-        {/* Slide dots */}
-        <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-          {heroSlides.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setSlide(i)}
-              className={`h-1 rounded-full transition-all duration-300 ${i === slide ? 'w-8 bg-olive-500' : 'w-3 bg-olive-700 hover:bg-olive-600'}`}
-            />
-          ))}
         </div>
       </section>
 
@@ -282,7 +179,7 @@ export const Home = () => {
                   <div className="text-sm font-semibold text-olive-200 group-hover:text-white transition-colors leading-snug">
                     {cat.label}
                   </div>
-                  <div className="text-[10px] text-olive-700 mt-0.5">{cat.count} товаров</div>
+                  <div className="text-[10px] text-olive-700 mt-0.5">{countBySlug[cat.slug] ?? cat.count} товаров</div>
                 </div>
               </Link>
             </motion.div>
@@ -291,14 +188,14 @@ export const Home = () => {
 
         {/* Remaining category chips */}
         <div className="mt-3 flex flex-wrap gap-2">
-          {categories.filter(c => !catCards.find(cc => cc.slug === c.slug)).map(cat => (
+          {liveCategories.filter(c => !catCards.find(cc => cc.slug === c.slug)).map(cat => (
             <Link
               key={cat.slug}
               to={`/catalog?cat=${cat.slug}`}
               className="text-xs text-olive-400 bg-dark-card border border-dark-border hover:border-olive-500/40 hover:text-white rounded-full px-3 py-1.5 transition-all"
             >
               {cat.label}
-              <span className="ml-1 text-olive-700">{cat.count}</span>
+              <span className="ml-1 text-olive-700">{countBySlug[cat.slug] ?? cat.count}</span>
             </Link>
           ))}
         </div>
@@ -393,7 +290,7 @@ export const Home = () => {
             <div>
               <h2 className="section-title mb-4">Интернет-магазин SkyDefence</h2>
               <p className="text-sm text-olive-500 leading-relaxed mb-4">
-                «СпецСнаряжение» — специализированный поставщик профессионального оборудования и технических средств специального назначения. Работаем с 2016 года.
+                SkyDefence — специализированный поставщик профессионального оборудования и технических средств специального назначения. Работаем с 2016 года.
               </p>
               <p className="text-sm text-olive-500 leading-relaxed mb-6">
                 В ассортименте: детекторы и подавители БПЛА, квадрокоптеры DJI, тактическое снаряжение, портативные электростанции и спутниковый интернет для силовых структур и охранных предприятий.
@@ -438,12 +335,12 @@ export const Home = () => {
           ))}
         </div>
         <p className="mt-4 text-xs text-olive-700 text-center">
-          Бесплатная доставка СДЭК при заказе от 50 000 ₽ · Самовывоз: Москва, ул. Тверская (уточняйте при заказе)
+          Бесплатная доставка СДЭК при заказе от 50 000 ₽ · Самовывоз: Москва, Багратионовский проезд, 7/2 (уточняйте при заказе)
         </p>
       </section>
 
       {/* ══ CALLBACK FORM ═══════════════════════════════════════ */}
-      <section className="bg-gradient-to-r from-olive-900/30 to-dark-card border-y border-dark-border py-12">
+      <section className="always-dark bg-gradient-to-r from-olive-900/30 to-dark-card border-y border-dark-border py-12">
         <div className="max-w-screen-xl mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center gap-8">
             <div className="flex-1 text-center md:text-left">
@@ -494,9 +391,11 @@ const CallbackForm = () => {
   const [error, setError]     = useState<string | null>(null);
   const [name, setName]       = useState('');
   const [phone, setPhone]     = useState('');
+  const [consent, setConsent] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!consent) return;
     setLoading(true);
     setError(null);
     try {
@@ -527,21 +426,31 @@ const CallbackForm = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
-      <input
-        type="text" required placeholder="Ваше имя" value={name}
-        onChange={e => setName(e.target.value)}
-        className="bg-dark border border-dark-border rounded-lg px-3 py-2.5 text-sm text-olive-200 placeholder-olive-700 focus:outline-none focus:border-olive-500 transition-colors min-w-0 sm:w-40"
-      />
-      <input
-        type="tel" required placeholder="+7 (999) 000-00-00" value={phone}
-        onChange={e => setPhone(e.target.value)}
-        className="bg-dark border border-dark-border rounded-lg px-3 py-2.5 text-sm text-olive-200 placeholder-olive-700 focus:outline-none focus:border-olive-500 transition-colors min-w-0 sm:w-44"
-      />
-      <button type="submit" disabled={loading} className="btn-primary whitespace-nowrap disabled:opacity-60">
-        {loading ? 'Отправка…' : 'Оставить заявку'}
-      </button>
-      {error && <p className="text-xs text-red-400 mt-1 sm:mt-0 sm:self-center">{error}</p>}
+    <form onSubmit={handleSubmit} className="flex flex-col gap-2 w-full md:w-auto">
+      <div className="flex flex-col sm:flex-row gap-2">
+        <input
+          type="text" required placeholder="Ваше имя" value={name}
+          onChange={e => setName(e.target.value)}
+          className="bg-dark border border-dark-border rounded-lg px-3 py-2.5 text-sm text-olive-200 placeholder-olive-700 focus:outline-none focus:border-olive-500 transition-colors min-w-0 sm:w-40"
+        />
+        <input
+          type="tel" required placeholder="+7 (999) 000-00-00" value={phone}
+          onChange={e => setPhone(e.target.value)}
+          className="bg-dark border border-dark-border rounded-lg px-3 py-2.5 text-sm text-olive-200 placeholder-olive-700 focus:outline-none focus:border-olive-500 transition-colors min-w-0 sm:w-44"
+        />
+        <button type="submit" disabled={loading || !consent} className="btn-primary whitespace-nowrap disabled:opacity-60">
+          {loading ? 'Отправка…' : 'Оставить заявку'}
+        </button>
+      </div>
+      <label className="flex items-start gap-2 cursor-pointer select-none">
+        <input type="checkbox" checked={consent} onChange={e => setConsent(e.target.checked)}
+          className="mt-0.5 h-4 w-4 shrink-0 accent-olive-500" />
+        <span className="text-[10px] text-olive-700 leading-snug">
+          Согласен(на) на обработку персональных данных согласно{' '}
+          <Link to="/politika" className="underline hover:text-olive-400">политике конфиденциальности</Link>
+        </span>
+      </label>
+      {error && <p className="text-xs text-red-400">{error}</p>}
     </form>
   );
 };

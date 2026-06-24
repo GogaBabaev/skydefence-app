@@ -1,11 +1,70 @@
-# Replace app.example.com with your domain (DNS A-record → server IP).
-# Caddy obtains and renews Let's Encrypt TLS certificates automatically.
-app.example.com {
+# Production reverse proxy + TLS (Let's Encrypt, auto-renewed).
+# This file mirrors what runs on the server. Two domains share one Caddy:
+#   sky-defence.ru      → Next.js website (skydef1-website)
+#   app.sky-defence.ru  → Telegram Mini App (web) + API (api)
+#
+# Product images (/images/*) are served DIRECTLY by Caddy from the host's
+# ./public/images folder (bind-mounted at /srv/images), for BOTH domains.
+# Admin-uploaded files land under /images/uploads/ via the same handler.
+
+# ─── Main website: sky-defence.ru ───────────────────────────────────────────
+sky-defence.ru, www.sky-defence.ru {
 	encode gzip zstd
+
+	# Product images served directly by Caddy (shared with mini app)
+	handle /images/* {
+		root * /srv
+		file_server
+		header Cache-Control "public, max-age=31536000, immutable"
+	}
+
+	# Next.js website
+	handle {
+		reverse_proxy website:3000
+	}
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		# Сайт не должен встраиваться в чужие iframe (защита от clickjacking).
+		X-Frame-Options "SAMEORIGIN"
+		# Next.js использует inline-скрипты гидрации и JSON-LD без nonce, поэтому
+		# script/style-src допускают 'unsafe-inline'. img-src открыт под https
+		# (карточки товаров, CDN). frame-ancestors дублирует X-Frame-Options.
+		Content-Security-Policy "default-src 'self'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; connect-src 'self'; frame-ancestors 'self'; base-uri 'self'; object-src 'none'"
+	}
+}
+
+# ─── Telegram Mini App: app.sky-defence.ru ──────────────────────────────────
+app.sky-defence.ru {
+	encode gzip zstd
+
+	# Admin surface (panel + admin API) is protected by HTTP Basic Auth at the
+	# edge — defence in depth on top of the in-app ADMIN_API_SECRET. This blocks
+	# anonymous brute-force of /api/admin/* from the internet. The Telegram bot
+	# is UNAFFECTED: it calls the API over the internal docker network
+	# (http://api:3000), never through Caddy.
+	#
+	# Credential for user "admin". Hash is bcrypt (cost 12); the plaintext is
+	# NOT stored in the repo — keep it in your password manager.
+	# Rotate with:  docker run --rm caddy:2-alpine caddy hash-password --plaintext '<new-pass>'
+	# then replace the hash below and redeploy.
+	@admin path /api/admin/* /admin.html
+	basic_auth @admin {
+		admin $2y$12$r.BY2LFVaLY34B.p7veYlOK.NgsO9yjR0LevWE9LiQm/4CxP0iENS
+	}
 
 	# API → NestJS
 	handle /api/* {
 		reverse_proxy api:3000
+	}
+
+	# Product images served directly by Caddy (no app server round-trip)
+	handle /images/* {
+		root * /srv
+		file_server
+		header Cache-Control "public, max-age=31536000, immutable"
 	}
 
 	# Mini App static files
@@ -17,5 +76,9 @@ app.example.com {
 		Strict-Transport-Security "max-age=31536000; includeSubDomains"
 		X-Content-Type-Options "nosniff"
 		Referrer-Policy "strict-origin-when-cross-origin"
+		# Мини-апп ОБЯЗАН встраиваться в iframe Telegram Web, поэтому вместо
+		# X-Frame-Options используем CSP frame-ancestors с разрешением telegram.org.
+		# Скрипт telegram-web-app.js грузится с https://telegram.org.
+		Content-Security-Policy "default-src 'self'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline' https://telegram.org; style-src 'self' 'unsafe-inline'; font-src 'self' data:; connect-src 'self'; frame-ancestors 'self' https://web.telegram.org https://*.telegram.org; base-uri 'self'; object-src 'none'"
 	}
 }

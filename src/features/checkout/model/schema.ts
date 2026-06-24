@@ -34,6 +34,11 @@ export const checkoutSchema = z.object({
     .max(1000)
     .optional()
     .or(z.literal('').transform(() => undefined)),
+  // 152-ФЗ: явное согласие на обработку ПДн. Фронтовый гейт — на бэкенд НЕ
+  // отправляется (там ValidationPipe forbidNonWhitelisted, лишнее поле = 400).
+  consent: z.literal(true, {
+    errorMap: () => ({ message: 'Подтвердите согласие на обработку персональных данных' }),
+  }),
 });
 
 export type CheckoutForm = z.infer<typeof checkoutSchema>;

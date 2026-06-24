@@ -11,8 +11,10 @@ class UpdateB2bStatusDto {
 }
 
 /**
- * Admin endpoints for the Telegram bot. Authenticated via shared secret;
- * blocked from the public internet at the Caddy layer (/api/admin/*).
+ * Admin endpoints for the Telegram bot. Authenticated via a shared secret
+ * (AdminSecretGuard) and additionally protected at the Caddy layer by HTTP
+ * Basic Auth on /api/admin/* (see Caddyfile.prod). The bot reaches these over
+ * the internal docker network and is unaffected by the edge auth.
  */
 @Controller('admin/b2b-requests')
 @UseGuards(AdminSecretGuard)

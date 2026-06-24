@@ -29,7 +29,7 @@ export const Blog = () => (
 
     {/* Main CTA card */}
     <motion.div {...fade(0)}
-      className="relative bg-gradient-to-br from-[#0d2a1a] to-[#0f1509] border border-olive-500/30 rounded-2xl p-8 mb-8 overflow-hidden text-center"
+      className="always-dark relative bg-gradient-to-br from-[#0d2a1a] to-[#0f1509] border border-olive-500/30 rounded-2xl p-8 mb-8 overflow-hidden text-center"
     >
       <div className="absolute inset-0 opacity-10"
         style={{ backgroundImage: 'repeating-linear-gradient(45deg, #47612e 0, #47612e 1px, transparent 0, transparent 50%)', backgroundSize: '14px 14px' }}

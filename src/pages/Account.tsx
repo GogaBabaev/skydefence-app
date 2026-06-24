@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   User, Package, Headphones,
-  ChevronRight, Phone, Mail,
+  ChevronRight, Phone, Mail, Send,
 } from 'lucide-react';
 import { BackButton } from '../shared/ui/BackButton';
 import { api } from '../shared/api/http';
@@ -90,6 +91,52 @@ const ProfileTab = () => {
   );
 };
 
+/* ── Order card (own state for expand/collapse) ─────────────────── */
+const OrderCard = ({ order }: { order: Order }) => {
+  const [expanded, setExpanded] = useState(false);
+  const statusLabel = STATUS_LABEL[order.status] ?? order.status;
+  const statusColor = STATUS_COLOR[order.status] ?? 'text-olive-400';
+
+  return (
+    <div className="bg-dark-card border border-dark-border rounded-xl p-4">
+      <div className="flex items-start justify-between mb-2">
+        <div>
+          <div className="text-xs font-bold text-white">Заявка №{order.number}</div>
+          <div className="text-[10px] text-olive-600 mt-0.5">{fmtDate(order.createdAt)}</div>
+        </div>
+        <span className={`text-xs font-semibold ${statusColor}`}>{statusLabel}</span>
+      </div>
+
+      <div className="text-sm text-olive-400 truncate mb-2">
+        {order.items[0]?.productName ?? '—'}
+        {order.items.length > 1 && ` +${order.items.length - 1} товар`}
+      </div>
+
+      <div className="flex items-center justify-between">
+        <span className="text-sm font-bold text-white">{fmtPrice(order.totalAmount)}</span>
+        <button
+          onClick={() => setExpanded(v => !v)}
+          className="flex items-center gap-1 text-xs text-olive-500 hover:text-white transition-colors"
+        >
+          {expanded ? 'Скрыть' : 'Подробнее'}
+          <ChevronRight size={12} className={`transition-transform ${expanded ? 'rotate-90' : ''}`} />
+        </button>
+      </div>
+
+      {expanded && (
+        <div className="mt-3 pt-3 border-t border-dark-border space-y-1.5">
+          {order.items.map((item, i) => (
+            <div key={i} className="flex justify-between text-xs text-olive-400">
+              <span className="truncate mr-2">{item.productName} × {item.quantity}</span>
+              <span className="shrink-0">{fmtPrice(item.unitPrice * item.quantity)}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
 /* ── Orders tab ─────────────────────────────────────────────────── */
 const OrdersTab = () => {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -134,50 +181,7 @@ const OrdersTab = () => {
   return (
     <div className="space-y-3">
       <div className="text-xs text-olive-600 uppercase tracking-wider px-1">История заказов</div>
-      {orders.map(order => {
-        const statusLabel = STATUS_LABEL[order.status] ?? order.status;
-        const statusColor = STATUS_COLOR[order.status] ?? 'text-olive-400';
-        const [expanded, setExpanded] = useState(false);
-
-        return (
-          <div key={order.id} className="bg-dark-card border border-dark-border rounded-xl p-4">
-            <div className="flex items-start justify-between mb-2">
-              <div>
-                <div className="text-xs font-bold text-white">Заявка №{order.number}</div>
-                <div className="text-[10px] text-olive-600 mt-0.5">{fmtDate(order.createdAt)}</div>
-              </div>
-              <span className={`text-xs font-semibold ${statusColor}`}>{statusLabel}</span>
-            </div>
-
-            <div className="text-sm text-olive-400 truncate mb-2">
-              {order.items[0]?.productName ?? '—'}
-              {order.items.length > 1 && ` +${order.items.length - 1} товар`}
-            </div>
-
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-bold text-white">{fmtPrice(order.totalAmount)}</span>
-              <button
-                onClick={() => setExpanded(v => !v)}
-                className="flex items-center gap-1 text-xs text-olive-500 hover:text-white transition-colors"
-              >
-                {expanded ? 'Скрыть' : 'Подробнее'}
-                <ChevronRight size={12} className={`transition-transform ${expanded ? 'rotate-90' : ''}`} />
-              </button>
-            </div>
-
-            {expanded && (
-              <div className="mt-3 pt-3 border-t border-dark-border space-y-1.5">
-                {order.items.map((item, i) => (
-                  <div key={i} className="flex justify-between text-xs text-olive-400">
-                    <span className="truncate mr-2">{item.productName} × {item.quantity}</span>
-                    <span className="shrink-0">{fmtPrice(item.unitPrice * item.quantity)}</span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        );
-      })}
+      {orders.map(order => <OrderCard key={order.id} order={order} />)}
     </div>
   );
 };
@@ -189,6 +193,7 @@ const SupportTab = () => (
       <div className="text-xs text-olive-600 uppercase tracking-wider mb-1">Связаться с нами</div>
       {[
         { icon: Phone, label: '+7 (495) 136-5777', sub: 'Пн–Сб 08:00–18:00', href: 'tel:+74951365777' },
+        { icon: Send,  label: '@starmobile77',      sub: 'Написать менеджеру в Telegram', href: 'https://t.me/starmobile77' },
         { icon: Mail,  label: 'info@skydefence.ru', sub: 'Ответим в течение часа', href: 'mailto:info@skydefence.ru' },
       ].map(({ icon: Icon, label, sub, href }) => (
         <a key={href} href={href} className="flex items-center gap-3 py-1 hover:text-white transition-colors group">
@@ -210,10 +215,10 @@ const SupportTab = () => (
         ['Гарантия и возврат',        '/garantiya'],
         ['Реквизиты',                 '/rekvizity'],
       ].map(([label, href]) => (
-        <a key={href} href={`#${href}`} className="w-full flex items-center justify-between text-sm text-olive-400 hover:text-white transition-colors py-1">
+        <Link key={href} to={href} className="w-full flex items-center justify-between text-sm text-olive-400 hover:text-white transition-colors py-1">
           {label}
           <ChevronRight size={13} className="text-olive-600 shrink-0" />
-        </a>
+        </Link>
       ))}
     </div>
   </div>

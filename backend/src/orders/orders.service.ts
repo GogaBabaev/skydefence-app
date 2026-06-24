@@ -16,9 +16,14 @@ interface OrderRow {
   status: string;
   totalAmount: Prisma.Decimal;
   currency: string;
+  userId: bigint | null;
+  customerName: string;
+  customerPhone: string;
+  deliveryAddress: string | null;
+  comment: string | null;
   createdAt: Date;
   items: {
-    productId: number;
+    productId: number | null;
     productName: string;
     unitPrice: Prisma.Decimal;
     quantity: number;
@@ -138,10 +143,12 @@ export class OrdersService {
       data: { status },
     });
 
-    // Notify the customer in their own Telegram chat. order.userId IS the
-    // customer's Telegram user id — best-effort, never blocks the response.
+    // Notify the customer in their own Telegram chat. Only for mini-app orders
+    // (userId != null); website orders have no Telegram user to notify.
     try {
-      void this.notify.notifyUser(updated.userId, updated.number, status);
+      if (updated.userId != null) {
+        void this.notify.notifyUser(updated.userId, updated.number, status);
+      }
     } catch {
       // notification is best-effort and must never break status updates
     }
@@ -164,7 +171,7 @@ export class OrdersService {
       include: { items: true },
     });
     if (!order) throw new NotFoundException('Order not found');
-    if (order.userId !== BigInt(tgUserId)) {
+    if (order.userId == null || order.userId !== BigInt(tgUserId)) {
       throw new ForbiddenException('Not your order');
     }
     return this.toDto(order);

@@ -93,6 +93,11 @@
   .gallery-item { position: relative; }
   .gallery-item img { width: 64px; height: 64px; object-fit: cover; border-radius: 6px; }
   .gallery-item .rm { position: absolute; top: -6px; right: -6px; background: #ef4444; color: white; border: none; border-radius: 50%; width: 18px; height: 18px; font-size: 11px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .spec-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+  .spec-row input { flex: 1; min-width: 0; }
+  .spec-row .rm-spec { flex: 0 0 auto; background: #2d3148; color: #ef4444; border: 1px solid #2d3148; border-radius: 8px; width: 38px; height: 38px; font-size: 18px; line-height: 1; cursor: pointer; }
+  .spec-row .rm-spec:hover { background: #ef4444; color: #fff; }
+  #specs-empty { font-size: 13px; color: #64748b; margin: 4px 0 8px; }
 
   /* Order detail */
   .detail-block { background: #0f1117; border-radius: 8px; padding: 14px; margin-top: 12px; }
@@ -320,8 +325,8 @@
       <input type="hidden" id="f-gallery" value="[]" />
 
       <label>Характеристики</label>
-      <textarea id="f-specs" rows="4" placeholder='[{"label":"Вес","value":"500г"},{"label":"Дальность","value":"3000м"}]'></textarea>
-      <div style="font-size:12px;color:#64748b;margin-top:4px">Формат JSON: массив объектов с полями label и value</div>
+      <div id="specs-rows"></div>
+      <button type="button" class="btn btn-secondary" style="margin-top:4px" onclick="addSpecRow()">+ Добавить характеристику</button>
 
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" onclick="closeProductModal()">Отмена</button>
@@ -365,6 +370,7 @@ const API_URL = 'https://app.sky-defence.ru/api';
 let secret = '';
 let products = [], categories = [], orders = [], b2bList = [];
 let editingGallery = [];
+let editingSpecs = [];
 let currentOrderId = null;
 let currentB2bId = null;
 
@@ -376,7 +382,10 @@ async function doLogin() {
     await apiFetch('/admin/products');
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('main-screen').style.display = 'block';
-    localStorage.setItem('admin_secret', secret);
+    // sessionStorage (not localStorage): the secret lives only for this tab's
+    // session and is cleared when the tab/browser closes — it is never
+    // persisted to disk, shrinking the window an XSS payload could steal it.
+    sessionStorage.setItem('admin_secret', secret);
     await loadAll();
   } catch {
     toast('Неверный секретный ключ', true);
@@ -384,7 +393,7 @@ async function doLogin() {
 }
 
 function logout() {
-  localStorage.removeItem('admin_secret');
+  sessionStorage.removeItem('admin_secret');
   secret = '';
   document.getElementById('login-screen').style.display = 'flex';
   document.getElementById('main-screen').style.display = 'none';
@@ -496,7 +505,8 @@ function openProductModal(id) {
   document.getElementById('f-short').value = p ? p.shortDesc : '';
   document.getElementById('f-full').value = p ? p.fullDesc : '';
   document.getElementById('f-image').value = p ? p.image : '';
-  document.getElementById('f-specs').value = p ? JSON.stringify(p.specs, null, 2) : '[]';
+  editingSpecs = (p && Array.isArray(p.specs)) ? p.specs.map(s => ({ label: s.label ?? '', value: s.value ?? '' })) : [];
+  renderSpecs();
   editingGallery = p ? [...p.gallery] : [];
   renderGallery();
   document.getElementById('main-image-preview').innerHTML = p?.image ? `<img class="preview-img" src="${esc(p.image)}" />` : '';
@@ -555,12 +565,36 @@ function renderGallery() {
 
 function removeGalleryItem(i) { editingGallery.splice(i, 1); renderGallery(); }
 
+/* ── Характеристики (редактор строк) ── */
+function renderSpecs() {
+  const box = document.getElementById('specs-rows');
+  if (!editingSpecs.length) {
+    box.innerHTML = '<div id="specs-empty">Нет характеристик. Нажмите «Добавить характеристику».</div>';
+    return;
+  }
+  // Escape for an HTML attribute (esc() misses quotes, e.g. a 2" display).
+  const a = (v) => esc(v).replace(/"/g, '&quot;');
+  // Bind values via oninput (no re-render on keystroke → keeps focus/cursor).
+  box.innerHTML = editingSpecs.map((s, i) => `
+    <div class="spec-row">
+      <input type="text" placeholder="Название (напр. Вес)" value="${a(s.label)}"
+             oninput="editingSpecs[${i}].label = this.value" />
+      <input type="text" placeholder="Значение (напр. 500 г)" value="${a(s.value)}"
+             oninput="editingSpecs[${i}].value = this.value" />
+      <button type="button" class="rm-spec" title="Удалить" onclick="removeSpecRow(${i})">×</button>
+    </div>`).join('');
+}
+
+function addSpecRow() { editingSpecs.push({ label: '', value: '' }); renderSpecs(); }
+function removeSpecRow(i) { editingSpecs.splice(i, 1); renderSpecs(); }
+
 async function saveProduct(e) {
   e.preventDefault();
   const id = document.getElementById('f-id').value;
-  let specs;
-  try { specs = JSON.parse(document.getElementById('f-specs').value || '[]'); }
-  catch { toast('Ошибка в характеристиках — проверьте формат JSON', true); return; }
+  // Drop fully-empty rows and trim; both fields blank → row ignored.
+  const specs = editingSpecs
+    .map(s => ({ label: (s.label || '').trim(), value: (s.value || '').trim() }))
+    .filter(s => s.label || s.value);
 
   const priceVal = document.getElementById('f-price').value;
   const oldPriceVal = document.getElementById('f-old-price').value;
@@ -777,7 +811,7 @@ function toast(msg, isError = false) {
 
 // ─── Auto-login ────────────────────────────────────────────────────────────────
 window.addEventListener('load', async () => {
-  const saved = localStorage.getItem('admin_secret');
+  const saved = sessionStorage.getItem('admin_secret');
   if (saved) {
     secret = saved;
     try {
@@ -785,7 +819,7 @@ window.addEventListener('load', async () => {
       document.getElementById('login-screen').style.display = 'none';
       document.getElementById('main-screen').style.display = 'block';
       await loadAll();
-    } catch { localStorage.removeItem('admin_secret'); }
+    } catch { sessionStorage.removeItem('admin_secret'); }
   }
 });
 </script>

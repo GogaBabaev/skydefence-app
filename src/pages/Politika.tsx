@@ -14,10 +14,10 @@ export const Politika = () => (
     <h1 className="text-xl font-bold text-white uppercase tracking-wide mb-6">Политика конфиденциальности</h1>
 
     <div className="bg-dark-card border border-dark-border rounded-xl p-5">
-      <p className="text-xs text-olive-600 mb-6">Дата вступления в силу: 1 января 2025 года</p>
+      <p className="text-xs text-olive-600 mb-6">Дата вступления в силу: июнь 2026 года</p>
 
       <Section title="1. Общие положения">
-        <p>ИП Баев С.А. (далее — «Оператор») обязуется соблюдать конфиденциальность персональных данных пользователей Telegram Mini App SkyDefence.</p>
+        <p>Оператором персональных данных является ООО «Мобильные технологии» (ИНН 7743412649, ОГРН 1237700190420, адрес: 125167, г. Москва, Новый Зыковский проезд, д. 3, пом. 19Ц; далее — «Оператор»). Оператор обязуется соблюдать конфиденциальность персональных данных пользователей Telegram Mini App SkyDefence.</p>
         <p>Настоящая политика разработана в соответствии с Федеральным законом № 152-ФЗ «О персональных данных».</p>
       </Section>
 
@@ -54,7 +54,7 @@ export const Politika = () => (
       </Section>
 
       <Section title="7. Контакты">
-        <p>ИП Баев С.А.</p>
+        <p>ООО «Мобильные технологии»</p>
         <p>Email: <span className="text-olive-300">info@skydefence.ru</span></p>
         <p>Телефон: <span className="text-olive-300">+7 (495) 136-5777</span></p>
       </Section>

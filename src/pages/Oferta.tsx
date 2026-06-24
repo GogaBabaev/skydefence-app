@@ -14,10 +14,10 @@ export const Oferta = () => (
     <h1 className="text-xl font-bold text-white uppercase tracking-wide mb-6">Публичная оферта</h1>
 
     <div className="bg-dark-card border border-dark-border rounded-xl p-5">
-      <p className="text-xs text-olive-600 mb-6">Дата публикации: 1 января 2025 года</p>
+      <p className="text-xs text-olive-600 mb-6">Дата публикации: июнь 2026 года</p>
 
       <Section title="1. Общие положения">
-        <p>Настоящая публичная оферта (далее — «Оферта») является официальным предложением ИП Баева С.А. (далее — «Продавец») заключить договор розничной купли-продажи товаров через Telegram Mini App SkyDefence.</p>
+        <p>Настоящая публичная оферта (далее — «Оферта») является официальным предложением ООО «Мобильные технологии» (далее — «Продавец») заключить договор розничной купли-продажи товаров через Telegram Mini App SkyDefence.</p>
         <p>Акцептом настоящей Оферты является оформление заказа через приложение.</p>
       </Section>
 
@@ -57,7 +57,14 @@ export const Oferta = () => (
       </Section>
 
       <Section title="8. Реквизиты продавца">
-        <p>ИП Баев Сергей Алексеевич</p>
+        <p>ООО «Мобильные технологии»</p>
+        <p>ИНН: <span className="text-olive-300">7743412649</span></p>
+        <p>КПП: <span className="text-olive-300">771401001</span></p>
+        <p>ОГРН: <span className="text-olive-300">1237700190420</span></p>
+        <p>Юридический адрес: <span className="text-olive-300">125167, г. Москва, Новый Зыковский проезд, д. 3, пом. 19Ц</span></p>
+        <p>Расчётный счёт: <span className="text-olive-300">40702810902540005273</span></p>
+        <p>Банк: <span className="text-olive-300">АО «Альфа-Банк»</span>, БИК 044525593</p>
+        <p>Корр. счёт: <span className="text-olive-300">30101810200000000593</span></p>
         <p>Email: <span className="text-olive-300">info@skydefence.ru</span></p>
         <p>Телефон: <span className="text-olive-300">+7 (495) 136-5777</span></p>
         <p>Сайт: <span className="text-olive-300">sky-defence.ru</span></p>

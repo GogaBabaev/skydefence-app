@@ -54,7 +54,7 @@ export const Garantiya = () => (
     <p className="text-sm text-olive-500 mb-8">Официальная гарантия на весь ассортимент магазина</p>
 
     {/* Banner */}
-    <motion.div {...fade(0)} className="bg-gradient-to-r from-olive-900/30 to-dark-card border border-olive-500/20 rounded-xl p-5 flex gap-4 items-center mb-8">
+    <motion.div {...fade(0)} className="always-dark bg-gradient-to-r from-olive-900/30 to-dark-card border border-olive-500/20 rounded-xl p-5 flex gap-4 items-center mb-8">
       <div className="w-12 h-12 rounded-xl bg-olive-500/20 flex items-center justify-center shrink-0">
         <Shield size={22} className="text-olive-400" />
       </div>
@@ -126,7 +126,7 @@ export const Garantiya = () => (
     <motion.div {...fade(0)} className="bg-dark-card border border-dark-border rounded-xl p-5 mb-6">
       <h2 className="text-sm font-bold text-white mb-3">Возврат товара надлежащего качества</h2>
       <p className="text-xs text-olive-500 leading-relaxed mb-2">
-        В соответствии с Законом о защите прав потребителей вы можете вернуть товар в течение <strong className="text-olive-300">14 дней</strong> с момента получения, если он не подошёл по форме, габаритам, фасону, расцветке или комплектации.
+        При дистанционной продаже (ст. 26.1 Закона «О защите прав потребителей») вы можете вернуть товар надлежащего качества в течение <strong className="text-olive-300">7 дней</strong> с момента получения, если он не подошёл по форме, габаритам, фасону, расцветке или комплектации.
       </p>
       <p className="text-xs text-olive-500 leading-relaxed">
         Условия: товар не был в употреблении, сохранены заводская упаковка, пломбы, ярлыки и все комплектующие. Возврат средств — в течение 10 дней после получения товара на склад.
@@ -134,7 +134,7 @@ export const Garantiya = () => (
     </motion.div>
 
     {/* CTA */}
-    <motion.div {...fade(0)} className="bg-gradient-to-r from-olive-900/30 to-dark-card border border-dark-border rounded-xl p-5 flex flex-col sm:flex-row items-center gap-4">
+    <motion.div {...fade(0)} className="always-dark bg-gradient-to-r from-olive-900/30 to-dark-card border border-dark-border rounded-xl p-5 flex flex-col sm:flex-row items-center gap-4">
       <div className="flex-1 text-center sm:text-left">
         <div className="text-base font-bold text-white mb-1">Нужна помощь с гарантийным случаем?</div>
         <div className="text-xs text-olive-500">Позвоните или напишите — разберёмся быстро</div>

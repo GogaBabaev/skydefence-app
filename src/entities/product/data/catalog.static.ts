@@ -13,6 +13,7 @@ export interface Product {
   image: string;
   gallery: string[];
   specs: { label: string; value: string }[];
+  features?: { title: string; items: string[] } | null;
 }
 
 const SD = 'https://skydefence.ru/wa-data/public/shop/products';

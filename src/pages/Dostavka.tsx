@@ -108,7 +108,7 @@ export const Dostavka = () => (
     <p className="text-sm text-olive-500 mb-8">Работаем по всей России и в страны СНГ</p>
 
     {/* Free delivery banner */}
-    <motion.div {...fade(0)} className="bg-gradient-to-r from-olive-900/40 to-dark-card border border-olive-500/20 rounded-xl p-4 mb-8 flex items-center gap-3">
+    <motion.div {...fade(0)} className="always-dark bg-gradient-to-r from-olive-900/40 to-dark-card border border-olive-500/20 rounded-xl p-4 mb-8 flex items-center gap-3">
       <div className="w-10 h-10 rounded-lg bg-olive-500/20 flex items-center justify-center shrink-0">
         <Package size={18} className="text-olive-400" />
       </div>
@@ -176,7 +176,7 @@ export const Dostavka = () => (
     </div>
 
     {/* CTA */}
-    <motion.div {...fade(0)} className="bg-gradient-to-r from-olive-900/30 to-dark-card border border-dark-border rounded-xl p-5 flex flex-col sm:flex-row items-center gap-4">
+    <motion.div {...fade(0)} className="always-dark bg-gradient-to-r from-olive-900/30 to-dark-card border border-dark-border rounded-xl p-5 flex flex-col sm:flex-row items-center gap-4">
       <div className="flex-1 text-center sm:text-left">
         <div className="text-base font-bold text-white mb-1">Остались вопросы?</div>
         <div className="text-xs text-olive-500">Менеджер ответит на все вопросы по доставке и поможет оформить заказ</div>

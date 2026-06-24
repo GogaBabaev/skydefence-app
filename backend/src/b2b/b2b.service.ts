@@ -36,29 +36,69 @@ export class B2bService {
       },
     });
 
-    // Notify the manager — best-effort, must never break request creation.
+    this.notifyNewRequest(request.id, dto);
+    return { id: request.id, status: request.status };
+  }
+
+  /**
+   * Creates a B2B request submitted from the public website (no Telegram
+   * auth — the visitor is anonymous, so userId stays null). Persists to the
+   * same table as the Mini App so it shows up in the admin panel, and sends
+   * the manager notification with the same status buttons.
+   */
+  async createFromWebsite(dto: CreateB2bRequestDto) {
+    const request = await this.prisma.b2bRequest.create({
+      data: {
+        company: dto.company,
+        inn: dto.inn,
+        contactName: dto.contactName,
+        phone: dto.phone,
+        email: dto.email,
+        productSlug: dto.productSlug,
+        message: dto.message,
+      },
+    });
+
+    this.notifyNewRequest(request.id, dto);
+    return { id: request.id, status: request.status };
+  }
+
+  /** Sends the manager a new-request notification with status buttons. */
+  private notifyNewRequest(id: number, dto: CreateB2bRequestDto) {
     try {
-      void this.notify.notifyManager(this.formatB2bMessage(request.id, dto), {
+      void this.notify.notifyManager(this.formatB2bMessage(id, dto), {
         inline_keyboard: [
           [
-            { text: '🔄 В работу', callback_data: `b2b:ip:${request.id}` },
-            { text: '✅ Закрыть',  callback_data: `b2b:cl:${request.id}` },
+            { text: '🔄 В работу', callback_data: `b2b:ip:${id}` },
+            { text: '✅ Закрыть',  callback_data: `b2b:cl:${id}` },
           ],
         ],
       });
     } catch {
-      // swallow — notification is best-effort
+      // swallow — notification is best-effort, never breaks request creation
     }
-
-    return { id: request.id, status: request.status };
   }
 
   /** Recent B2B requests for the manager (bot /b2b command). */
   async listRecent(limit = 20) {
-    return this.prisma.b2bRequest.findMany({
+    const rows = await this.prisma.b2bRequest.findMany({
       orderBy: { createdAt: 'desc' },
       take: Math.min(Math.max(limit, 1), 50),
     });
+    // Map to a plain DTO — the raw row has a BigInt `userId` that JSON cannot
+    // serialize (would 500). The bot/admin only need the contact fields.
+    return rows.map((r) => ({
+      id: r.id,
+      company: r.company,
+      inn: r.inn,
+      contactName: r.contactName,
+      phone: r.phone,
+      email: r.email,
+      productSlug: r.productSlug,
+      message: r.message,
+      status: r.status,
+      createdAt: r.createdAt,
+    }));
   }
 
   /** Update B2B request status (called by Telegram bot inline buttons). */

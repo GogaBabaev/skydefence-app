@@ -11,9 +11,11 @@ export const Contacts = () => {
   const [sent, setSent]     = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError]   = useState<string | null>(null);
+  const [consent, setConsent] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!consent) return;
     setLoading(true);
     setError(null);
     try {
@@ -165,7 +167,15 @@ export const Contacts = () => {
                   rows={3}
                   className="w-full bg-dark border border-dark-border rounded-lg px-3 py-2.5 text-sm text-olive-200 placeholder-olive-700 focus:outline-none focus:border-olive-500 transition-colors resize-none" />
               </div>
-              <button type="submit" disabled={loading} className="w-full btn-primary py-3 justify-center disabled:opacity-60">
+              <label className="flex items-start gap-2 cursor-pointer select-none">
+                <input type="checkbox" checked={consent} onChange={e => setConsent(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 shrink-0 accent-olive-500" />
+                <span className="text-[10px] text-olive-600 leading-snug">
+                  Я согласен(на) на обработку персональных данных в соответствии с{' '}
+                  <Link to="/politika" className="hover:text-olive-400 underline">политикой конфиденциальности</Link>
+                </span>
+              </label>
+              <button type="submit" disabled={loading || !consent} className="w-full btn-primary py-3 justify-center disabled:opacity-60">
                 {loading ? (
                   <span className="flex items-center gap-2">
                     <motion.span animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
@@ -175,10 +185,6 @@ export const Contacts = () => {
                 ) : 'Оставить заявку'}
               </button>
               {error && <p className="text-xs text-red-400 text-center">{error}</p>}
-              <p className="text-[10px] text-olive-700 text-center">
-                Нажимая кнопку, вы соглашаетесь с{' '}
-                <Link to="/politika" className="hover:text-olive-500 underline">политикой обработки данных</Link>
-              </p>
             </form>
           )}
         </motion.div>

@@ -20,6 +20,8 @@ import { Blog } from '../pages/Blog';
 import { Account } from '../pages/Account';
 import { Politika } from '../pages/Politika';
 import { Oferta } from '../pages/Oferta';
+import { Oplata } from '../pages/Oplata';
+import { B2B } from '../pages/B2B';
 import '../index.css';
 
 /* ─── Theme context ────────────────────────────────────────────── */
@@ -45,7 +47,8 @@ const StubPage = ({ title }: { title: string }) => (
   <div className="max-w-screen-xl mx-auto px-4 py-12 text-olive-500 text-center">
     <div className="text-xs text-olive-700 mb-4">Главная / {title}</div>
     <h1 className="text-xl font-bold text-white mb-2">{title}</h1>
-    <p className="text-sm">Страница находится в разработке</p>
+    <p className="text-sm mb-5">Страница находится в разработке</p>
+    <a href="#/" className="btn-primary inline-flex">На главную</a>
   </div>
 );
 
@@ -59,6 +62,12 @@ const Fade = ({ children }: { children: React.ReactNode }) => (
     {children}
   </motion.div>
 );
+
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
+  return null;
+};
 
 const AnimatedRoutes = () => {
   const location = useLocation();
@@ -79,9 +88,8 @@ const AnimatedRoutes = () => {
         <Route path="/rekvizity"   element={<Fade><Rekvizity /></Fade>} />
         <Route path="/blog"        element={<Fade><Blog /></Fade>} />
         <Route path="/account"     element={<Fade><Account /></Fade>} />
-        <Route path="/oplata"      element={<Fade><StubPage title="Оплата" /></Fade>} />
-        <Route path="/otzyvy"      element={<Fade><StubPage title="Отзывы" /></Fade>} />
-        <Route path="/sertifikaty" element={<Fade><StubPage title="Сертификаты" /></Fade>} />
+        <Route path="/oplata"      element={<Fade><Oplata /></Fade>} />
+        <Route path="/b2b"         element={<Fade><B2B /></Fade>} />
         <Route path="/politika"    element={<Fade><Politika /></Fade>} />
         <Route path="/oferta"      element={<Fade><Oferta /></Fade>} />
         <Route path="*"            element={<Fade><StubPage title="Страница не найдена" /></Fade>} />
@@ -107,6 +115,7 @@ function App() {
       <ThemeProvider>
         <Preloader visible={loading} />
         <div className="min-h-screen bg-dark text-e8ead4">
+          <ScrollToTop />
           <Navbar />
           <main><AnimatedRoutes /></main>
           <Footer />

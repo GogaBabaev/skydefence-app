@@ -38,7 +38,7 @@ export async function fetchProduct(slug: string): Promise<Product | null> {
   try {
     return await api<Product>(`/products/${slug}`);
   } catch {
-    return staticProducts.find((p) => p.slug === slug) ?? null;
+    return null;
   }
 }
 
@@ -59,7 +59,7 @@ function filterStatic(category?: string): Product[] {
 /* ── React hooks ─────────────────────────────────────────────── */
 
 export function useProducts(category?: string) {
-  const [products, setProducts] = useState<Product[]>(filterStatic(category));
+  const [products, setProducts] = useState<Product[]>(API_ENABLED ? [] : filterStatic(category));
   const [loading, setLoading] = useState(API_ENABLED);
 
   useEffect(() => {
@@ -79,21 +79,47 @@ export function useProducts(category?: string) {
   return { products, loading };
 }
 
+/**
+ * Live category list with real product counts from the backend. Starts from
+ * the bundled static list (instant render / offline fallback) and swaps in
+ * live data — including up-to-date `count` — once the API responds.
+ */
+export function useCategories() {
+  const [categories, setCategories] = useState<Category[]>(staticCategories);
+
+  useEffect(() => {
+    let active = true;
+    fetchCategories().then((data) => {
+      if (active && data?.length) setCategories(data);
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  return categories;
+}
+
 export function useProduct(slug: string | undefined) {
   const [product, setProduct] = useState<Product | null>(
-    () => staticProducts.find((p) => p.slug === slug) ?? null,
+    API_ENABLED ? null : (staticProducts.find((p) => p.slug === slug) ?? null),
   );
+  const [loading, setLoading] = useState(API_ENABLED);
 
   useEffect(() => {
     if (!slug) return;
     let active = true;
+    setLoading(API_ENABLED);
     fetchProduct(slug).then((data) => {
-      if (active && data) setProduct(data);
+      if (active) {
+        setProduct(data);
+        setLoading(false);
+      }
     });
     return () => {
       active = false;
     };
   }, [slug]);
 
-  return product;
+  return { product, loading };
 }

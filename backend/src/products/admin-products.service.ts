@@ -28,6 +28,7 @@ export class AdminProductsService {
       image: p.image,
       gallery: p.gallery,
       specs: p.specs,
+      features: p.features,
     }));
   }
 
@@ -47,6 +48,7 @@ export class AdminProductsService {
         image: dto.image,
         gallery: dto.gallery,
         specs: dto.specs as object[],
+        ...(dto.features !== undefined ? { features: dto.features as object } : {}),
         isActive: dto.isActive ?? true,
       },
     });
@@ -70,6 +72,7 @@ export class AdminProductsService {
         image: dto.image,
         gallery: dto.gallery,
         specs: dto.specs as object[],
+        ...(dto.features !== undefined ? { features: dto.features as object } : {}),
         isActive: dto.isActive ?? true,
       },
     });

@@ -20,7 +20,7 @@ export const Catalog = () => {
   };
 
   // catalog comes from the backend API (static bundle as offline fallback)
-  const { products } = useProducts(catSlug);
+  const { products, loading } = useProducts(catSlug);
   let items = products;
   if (searchQuery) {
     const q = searchQuery.toLowerCase();
@@ -83,7 +83,13 @@ export const Catalog = () => {
       </div>
 
       {/* Grid */}
-      {items.length > 0 ? (
+      {loading ? (
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div key={i} className="bg-dark-card border border-dark-border rounded-xl h-64 animate-pulse" />
+          ))}
+        </div>
+      ) : items.length > 0 ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
           {items.map((p, i) => (
             <motion.div
@@ -97,7 +103,19 @@ export const Catalog = () => {
           ))}
         </div>
       ) : (
-        <div className="py-20 text-center text-olive-600">Товары не найдены</div>
+        <div className="py-20 text-center text-olive-600">
+          Товары не найдены
+          {searchQuery && (
+            <div className="mt-4">
+              <button
+                onClick={() => setSearchParams({})}
+                className="btn-primary text-sm"
+              >
+                Сбросить поиск
+              </button>
+            </div>
+          )}
+        </div>
       )}
 
       {/* All products count */}

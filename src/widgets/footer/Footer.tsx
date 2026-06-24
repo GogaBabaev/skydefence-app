@@ -32,7 +32,7 @@ export const Footer = () => (
         <div>
           <h4 className="text-xs font-semibold text-olive-400 uppercase tracking-wider mb-3">Компания</h4>
           <ul className="space-y-2">
-            {[['О компании','/about'],['Отзывы','/otzyvy'],['Сертификаты','/sertifikaty'],['Блог','/blog'],['Реквизиты','/rekvizity']].map(([l,p])=>(
+            {[['О компании','/about'],['B2B / Опт','/b2b'],['Блог','/blog'],['Реквизиты','/rekvizity'],['Контакты','/contacts']].map(([l,p])=>(
               <li key={p}><Link to={p} className="text-xs text-olive-600 hover:text-olive-300 transition-colors">{l}</Link></li>
             ))}
           </ul>

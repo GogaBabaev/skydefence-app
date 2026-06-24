@@ -91,7 +91,7 @@ export const Aktsii = () => (
         <motion.div key={b.slug} {...fade(i)}>
           <Link
             to={`/product/${b.slug}`}
-            className={`group flex gap-4 bg-gradient-to-br ${b.accent} border border-dark-border hover:border-olive-500/40 rounded-xl p-5 transition-all overflow-hidden relative`}
+            className={`always-dark group flex gap-4 bg-gradient-to-br ${b.accent} border border-dark-border hover:border-olive-500/40 rounded-xl p-5 transition-all overflow-hidden relative`}
           >
             <div className="absolute inset-0 opacity-10"
               style={{ backgroundImage: 'repeating-linear-gradient(45deg, #47612e 0, #47612e 1px, transparent 0, transparent 50%)', backgroundSize: '12px 12px' }}
@@ -165,7 +165,7 @@ export const Aktsii = () => (
 
     {/* CTA */}
     <motion.div {...fade(0)}
-      className="bg-gradient-to-r from-olive-900/30 to-dark-card border border-dark-border rounded-xl p-5 flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left"
+      className="always-dark bg-gradient-to-r from-olive-900/30 to-dark-card border border-dark-border rounded-xl p-5 flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left"
     >
       <div className="flex-1">
         <div className="text-base font-bold text-white mb-1">Хотите индивидуальное предложение?</div>

@@ -1,5 +1,9 @@
-# Production: Caddy (TLS) → web (static) + api → PostgreSQL
+# Production: Caddy (TLS) → web (static) + website (Next.js) + api → PostgreSQL
 # Usage: docker compose -f docker-compose.prod.yml up -d --build
+#
+# Product images live on the host at ./public/images and are bind-mounted into:
+#   - caddy  (read-only)  → served at /images/*  (incl. admin uploads under /images/uploads/)
+#   - api    (read-write) → admin panel writes uploaded files to /app/images/uploads
 services:
   caddy:
     image: caddy:2-alpine
@@ -9,11 +13,13 @@ services:
       - '443:443'
     volumes:
       - ./Caddyfile.prod:/etc/caddy/Caddyfile:ro
+      - ./public/images:/srv/images:ro
       - caddy_data:/data
       - caddy_config:/config
     depends_on:
       - api
       - web
+      - website
 
   web:
     build:
@@ -28,12 +34,32 @@ services:
     build: ./backend
     restart: unless-stopped
     env_file: ./backend/.env.production
+    volumes:
+      # Admin-uploaded product images land here; Caddy serves the same folder at /images/*
+      - ./public/images:/app/images
     environment:
       DATABASE_URL: postgresql://skydefence:${POSTGRES_PASSWORD:?set in .env}@postgres:5432/skydefence?schema=public
       NODE_ENV: production
+      # Route Telegram API calls through the same SOCKS proxy as the bot so
+      # order/B2B notifications aren't dropped when Telegram is IP-blocked.
+      SOCKS_PROXY: ${SOCKS_PROXY:-}
     depends_on:
       postgres:
         condition: service_healthy
+
+  website:
+    build:
+      context: ../skydef1-website
+    restart: unless-stopped
+    environment:
+      HOSTNAME: '0.0.0.0'
+      PORT: '3000'
+      API_URL: 'http://api:3000/api'
+      # NB: no TELEGRAM_BOT_TOKEN here on purpose. Website order/B2B/callback
+      # forms forward to the backend (/api/leads/*, /api/b2b-requests/website),
+      # which holds the token and notifies the manager. Keeping the token OUT of
+      # the public-facing site closes the exfiltration path from the Next.js RCE
+      # incident (2026-06-23) — even a future site breach finds nothing to steal.
 
   bot:
     build:
@@ -46,6 +72,7 @@ services:
       API_BASE_URL: http://api:3000
       ADMIN_API_SECRET: ${ADMIN_API_SECRET:?set in .env}
       TELEGRAM_MANAGER_CHAT_ID: ${TELEGRAM_MANAGER_CHAT_ID:?set in .env}
+      SOCKS_PROXY: ${SOCKS_PROXY:-}
     depends_on:
       - api
 

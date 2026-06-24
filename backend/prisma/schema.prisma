@@ -48,12 +48,14 @@ model Product {
   image      String
   gallery    String[]
   specs      Json        @default("[]")
+  /// { "title": "Преимущества"|"Особенности"|"Характеристики", "items": string[] } — null = no block
+  features   Json?
   isActive   Boolean     @default(true) @map("is_active")
   createdAt  DateTime    @default(now()) @map("created_at")
   updatedAt  DateTime    @updatedAt @map("updated_at")
   orderItems OrderItem[]
 
-  @@index([categoryId])
+  @@index([categoryId, isActive])
   @@map("products")
 }
 
@@ -68,8 +70,9 @@ enum OrderStatus {
 model Order {
   id              String      @id @default(uuid())
   number          Int         @unique @default(autoincrement())
-  userId          BigInt      @map("user_id")
-  user            User        @relation(fields: [userId], references: [id])
+  /// null for website orders (no Telegram user)
+  userId          BigInt?     @map("user_id")
+  user            User?       @relation(fields: [userId], references: [id])
   status          OrderStatus @default(NEW)
   totalAmount     Decimal     @map("total_amount") @db.Decimal(12, 2)
   currency        String      @default("RUB")
@@ -89,11 +92,12 @@ model Order {
 }
 
 model OrderItem {
-  id          Int     @id @default(autoincrement())
-  orderId     String  @map("order_id")
-  order       Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  productId   Int     @map("product_id")
-  product     Product @relation(fields: [productId], references: [id])
+  id          Int      @id @default(autoincrement())
+  orderId     String   @map("order_id")
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  /// null for website orders where items are free-text, not DB products
+  productId   Int?     @map("product_id")
+  product     Product? @relation(fields: [productId], references: [id])
   // Snapshot at purchase time — product may change later
   productName String  @map("product_name")
   unitPrice   Decimal @map("unit_price") @db.Decimal(12, 2)
@@ -101,6 +105,17 @@ model OrderItem {
 
   @@index([orderId])
   @@map("order_items")
+}
+
+// ── Callback requests (sky-defence.ru "call me back" form) ────────
+model LeadCallback {
+  id        Int      @id @default(autoincrement())
+  name      String
+  phone     String
+  message   String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("lead_callbacks")
 }
 
 // ── B2B requests ───────────────────────────────────────────────────

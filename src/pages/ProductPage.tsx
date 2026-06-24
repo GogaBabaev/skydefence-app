@@ -15,14 +15,16 @@ export const ProductPage = () => {
   const navigate  = useNavigate();
   const { showBackButton, hideBackButton, hapticNotification } = useTelegram();
   const [imgIdx, setImgIdx]     = useState(0);
+  const [lightbox, setLightbox]   = useState(false);
   const [showForm, setShowForm]   = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [form, setForm]           = useState({ name: '', phone: '' });
+  const [consent, setConsent]     = useState(false);
   const [added, setAdded]         = useState(false);
 
-  const product = useProduct(slug);
+  const { product, loading } = useProduct(slug);
   const { add } = useCart();
 
   useEffect(() => {
@@ -30,6 +32,12 @@ export const ProductPage = () => {
     showBackButton(back);
     return () => hideBackButton(back);
   }, [navigate, showBackButton, hideBackButton]);
+
+  if (loading) return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="w-8 h-8 rounded-full border-2 border-olive-500 border-t-transparent animate-spin" />
+    </div>
+  );
 
   if (!product) return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 text-olive-500">
@@ -94,11 +102,12 @@ export const ProductPage = () => {
                 key={imgIdx}
                 src={product.gallery[imgIdx]}
                 alt={product.name}
+                onClick={() => setLightbox(true)}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover cursor-zoom-in"
               />
             </AnimatePresence>
             {product.badge && (
@@ -183,7 +192,13 @@ export const ProductPage = () => {
           </div>
 
           {/* Share */}
-          <button className="flex items-center gap-1.5 text-xs text-olive-600 hover:text-olive-400 transition-colors mb-6">
+          <button
+            onClick={() =>
+              navigator.share?.({ url: window.location.href, title: product.name }) ??
+              navigator.clipboard?.writeText(window.location.href)
+            }
+            className="flex items-center gap-1.5 text-xs text-olive-600 hover:text-olive-400 transition-colors mb-6"
+          >
             <Share2 size={12} /> Поделиться
           </button>
 
@@ -207,8 +222,25 @@ export const ProductPage = () => {
       {/* Full description */}
       <div className="mt-8 bg-dark-card border border-dark-border rounded-xl p-5">
         <h2 className="text-sm font-bold text-white uppercase tracking-wide mb-3">Описание</h2>
-        <p className="text-sm text-olive-400 leading-relaxed">{product.fullDesc}</p>
+        <p className="text-sm text-olive-400 leading-relaxed whitespace-pre-line">{product.fullDesc}</p>
       </div>
+
+      {/* Features / advantages */}
+      {product.features && product.features.items?.length > 0 && (
+        <div className="mt-4 bg-dark-card border border-dark-border rounded-xl p-5">
+          <h2 className="text-sm font-bold text-white uppercase tracking-wide mb-3">
+            {product.features.title || 'Преимущества'}
+          </h2>
+          <ul className="space-y-2">
+            {product.features.items.map((it, i) => (
+              <li key={i} className="flex gap-2 text-sm text-olive-400 leading-relaxed">
+                <span className="text-olive-500 shrink-0 mt-0.5">•</span>
+                <span>{it}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {/* Full specs */}
       <div className="mt-4 bg-dark-card border border-dark-border rounded-xl overflow-hidden">
@@ -261,14 +293,69 @@ export const ProductPage = () => {
                   <input type="tel" required placeholder="Номер телефона" value={form.phone}
                     onChange={e => setForm({...form, phone: e.target.value})}
                     className="w-full bg-dark border border-dark-border rounded-lg px-3 py-2.5 text-sm text-olive-200 placeholder-olive-700 focus:outline-none focus:border-olive-500 transition-colors" />
-                  <button type="submit" disabled={submitting} className="w-full btn-primary py-3 justify-center disabled:opacity-60">
+                  <label className="flex items-start gap-2 cursor-pointer select-none">
+                    <input type="checkbox" checked={consent} onChange={e => setConsent(e.target.checked)}
+                      className="mt-0.5 h-4 w-4 shrink-0 accent-olive-500" />
+                    <span className="text-[10px] text-olive-600 leading-snug">
+                      Я согласен(на) на обработку персональных данных в соответствии с{' '}
+                      <Link to="/politika" className="underline hover:text-olive-400">политикой конфиденциальности</Link>
+                    </span>
+                  </label>
+                  <button type="submit" disabled={submitting || !consent} className="w-full btn-primary py-3 justify-center disabled:opacity-60">
                     {submitting ? 'Отправка…' : 'Оставить заявку'}
                   </button>
                   {submitError && <p className="text-xs text-red-400 text-center">{submitError}</p>}
-                  <p className="text-[10px] text-olive-700 text-center">Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности</p>
                 </form>
               )}
             </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Fullscreen photo viewer */}
+      <AnimatePresence>
+        {lightbox && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center"
+            onClick={() => setLightbox(false)}
+          >
+            <button
+              onClick={() => setLightbox(false)}
+              className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white">
+              <X size={22} />
+            </button>
+
+            <motion.img
+              key={imgIdx}
+              src={product.gallery[imgIdx]}
+              alt={product.name}
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.2 }}
+              onClick={e => e.stopPropagation()}
+              className="max-w-[95vw] max-h-[85vh] object-contain"
+            />
+
+            {product.gallery.length > 1 && (
+              <>
+                <button
+                  onClick={e => { e.stopPropagation(); setImgIdx(i => (i - 1 + product.gallery.length) % product.gallery.length); }}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/10 flex items-center justify-center text-white">
+                  <ChevronLeft size={24} />
+                </button>
+                <button
+                  onClick={e => { e.stopPropagation(); setImgIdx(i => (i + 1) % product.gallery.length); }}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/10 flex items-center justify-center text-white">
+                  <ChevronRight size={24} />
+                </button>
+                <div className="absolute bottom-5 left-1/2 -translate-x-1/2 text-white/80 text-sm bg-white/10 rounded-full px-3 py-1">
+                  {imgIdx + 1} / {product.gallery.length}
+                </div>
+              </>
+            )}
           </motion.div>
         )}
       </AnimatePresence>

@@ -3,9 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
-import { Send, Loader2, ShoppingCart } from 'lucide-react';
+import { Send, Loader2, ShoppingCart, CheckCircle2 } from 'lucide-react';
 import { useCart } from '../../features/cart/model/cart.store';
-import { createOrder } from '../../features/checkout/api';
+import { createOrder, createQuoteRequest } from '../../features/checkout/api';
 import {
   checkoutSchema,
   type CheckoutForm,
@@ -25,10 +25,12 @@ export const Checkout = () => {
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
+  const [quoteSent, setQuoteSent] = useState(false);
 
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<CheckoutForm>({
     resolver: zodResolver(checkoutSchema),
@@ -43,44 +45,94 @@ export const Checkout = () => {
   });
 
   const payable = items.filter((i) => i.product.price !== null);
+  const onRequest = items.filter((i) => i.product.price === null);
 
-  const onSubmit = handleSubmit(async (form) => {
-    if (submitting || payable.length === 0) return;
+  // Items without a price ("по запросу") can't be priced server-side. When the
+  // cart also has priced items we attach them to the order comment so the
+  // manager sees the full intent; when the cart is ONLY on-request items we
+  // send a price-quote request instead of an order.
+  const onRequestNote = onRequest.length
+    ? `Также интересует (уточнить цену): ${onRequest
+        .map((i) => `${i.product.name} ×${i.qty}`)
+        .join('; ')}`
+    : '';
+
+  const onSubmit = handleSubmit(async ({ consent: _consent, ...form }) => {
+    // `consent` is a 152-ФЗ frontend gate only — never sent to the backend
+    // (ValidationPipe forbidNonWhitelisted would reject the extra field).
+    if (submitting || items.length === 0) return;
     setSubmitting(true);
     setServerError(null);
     try {
-      // create order — server recomputes all prices and notifies the
-      // manager in Telegram; payment is arranged by manual transfer
-      const order = await createOrder(
-        form,
-        payable.map((i) => ({
-          productId: Number(i.product.id),
-          quantity: i.qty,
-        })),
-      );
-      clear();
-      hapticNotification('success');
-      navigate(`/order/${order.id}`);
+      if (payable.length > 0) {
+        // create order — server recomputes all prices and notifies the
+        // manager in Telegram; payment is arranged by manual transfer.
+        // On-request items (if any) are appended to the comment.
+        const mergedComment = [form.comment?.trim(), onRequestNote]
+          .filter(Boolean)
+          .join('\n');
+        const order = await createOrder(
+          { ...form, comment: mergedComment || undefined },
+          payable.map((i) => ({
+            productId: Number(i.product.id),
+            quantity: i.qty,
+          })),
+        );
+        clear();
+        hapticNotification('success');
+        navigate(`/order/${order.id}`);
+      } else {
+        // cart is entirely "по запросу" — send a quote request to the manager
+        await createQuoteRequest(
+          form,
+          onRequest.map((i) => ({ name: i.product.name, quantity: i.qty })),
+        );
+        clear();
+        hapticNotification('success');
+        setQuoteSent(true);
+      }
     } catch (e) {
       hapticNotification('error');
       setServerError(
-        e instanceof Error ? e.message : 'Не удалось создать заказ',
+        e instanceof Error ? e.message : 'Не удалось отправить заявку',
       );
     } finally {
       setSubmitting(false);
     }
   });
 
+  const onlyOnRequest = payable.length === 0 && onRequest.length > 0;
+  const consented = watch('consent') === true;
+
   // Telegram MainButton drives the form
   useMainButton({
     text: submitting
       ? 'Отправляем заявку…'
-      : `Оформить заявку — ${fmtPrice(totalPrice)}`,
-    visible: payable.length > 0,
-    disabled: submitting,
+      : !consented
+        ? 'Подтвердите согласие на обработку данных'
+        : onlyOnRequest
+          ? 'Отправить запрос менеджеру'
+          : `Оформить заявку — ${fmtPrice(totalPrice)}`,
+    visible: items.length > 0 && !quoteSent,
+    disabled: submitting || !consented,
     loading: submitting,
     onClick: onSubmit,
   });
+
+  if (quoteSent) {
+    return (
+      <div className="max-w-screen-xl mx-auto px-4 py-16 flex flex-col items-center text-center">
+        <div className="w-20 h-20 rounded-full bg-green-500/10 border border-green-500/30 flex items-center justify-center mb-5">
+          <CheckCircle2 size={32} className="text-green-400" />
+        </div>
+        <h1 className="text-xl font-bold text-white mb-2">Запрос отправлен</h1>
+        <p className="text-sm text-olive-500 mb-6 max-w-xs">
+          Менеджер уточнит цену по выбранным товарам и свяжется с вами.
+        </p>
+        <Link to="/catalog" className="btn-primary">Вернуться в каталог</Link>
+      </div>
+    );
+  }
 
   if (items.length === 0) {
     return (
@@ -101,7 +153,10 @@ export const Checkout = () => {
       className="max-w-screen-md mx-auto px-4 py-6 pb-28"
     >
       <div className="text-xs text-olive-700 mb-4">
-        Главная / Корзина / Оформление
+        <Link to="/" className="hover:text-olive-400 transition-colors">Главная</Link>
+        {' / '}
+        <Link to="/cart" className="hover:text-olive-400 transition-colors">Корзина</Link>
+        {' / Оформление'}
       </div>
       <h1 className="section-title mb-6">Оформление заказа</h1>
 
@@ -118,11 +173,19 @@ export const Checkout = () => {
           </div>
         ))}
         <div className="flex justify-between items-center pt-2 border-t border-dark-border">
-          <span className="text-sm text-olive-400">К оплате:</span>
+          <span className="text-sm text-olive-400">
+            {onlyOnRequest ? 'Сумма:' : 'К оплате:'}
+          </span>
           <span className="text-lg font-bold text-white">
-            {fmtPrice(totalPrice)}
+            {onlyOnRequest ? 'По запросу' : fmtPrice(totalPrice)}
           </span>
         </div>
+        {onRequest.length > 0 && !onlyOnRequest && (
+          <p className="text-[11px] text-olive-600 pt-1">
+            Товары «по запросу» не входят в сумму — менеджер уточнит их цену
+            отдельно и добавит к заявке.
+          </p>
+        )}
       </div>
 
       {!API_ENABLED && (
@@ -202,9 +265,30 @@ export const Checkout = () => {
           </div>
         )}
 
+        {/* 152-ФЗ: явное согласие на обработку ПДн, по умолчанию не отмечено */}
+        <div>
+          <label className="flex items-start gap-2.5 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              {...register('consent')}
+              className="mt-0.5 h-4 w-4 shrink-0 accent-olive-500"
+            />
+            <span className="text-[11px] text-olive-500 leading-snug">
+              Я согласен(на) на обработку моих персональных данных в соответствии с{' '}
+              <Link to="/politika" className="text-olive-300 underline">
+                политикой конфиденциальности
+              </Link>
+              .
+            </span>
+          </label>
+          {errors.consent && (
+            <p className="mt-1 text-[11px] text-danger">{errors.consent.message}</p>
+          )}
+        </div>
+
         <button
           type="submit"
-          disabled={submitting || !API_ENABLED}
+          disabled={submitting || !API_ENABLED || !consented}
           className="w-full btn-primary py-3 justify-center disabled:opacity-50"
         >
           {submitting ? (
@@ -213,7 +297,9 @@ export const Checkout = () => {
             <Send size={16} />
           )}
           <span className="ml-2">
-            Оформить заявку — {fmtPrice(totalPrice)}
+            {onlyOnRequest
+              ? 'Отправить запрос менеджеру'
+              : `Оформить заявку — ${fmtPrice(totalPrice)}`}
           </span>
         </button>
         <p className="text-[10px] text-olive-700 text-center">

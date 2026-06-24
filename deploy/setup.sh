@@ -26,10 +26,15 @@ cd /opt/skydefence
 
 echo "→ Генерация секретов и конфигов…"
 PG_PASS=$(openssl rand -hex 24)
+# Общий секрет между API и ботом для админ-эндпоинтов (/api/admin/*).
+# Требуется и docker-compose (бот), и backend (env.validation) — генерируем один раз.
+ADMIN_API_SECRET=$(openssl rand -hex 24)
 
 cat > .env <<EOF
 POSTGRES_PASSWORD=${PG_PASS}
 TELEGRAM_BOT_TOKEN=${BOT_TOKEN}
+TELEGRAM_MANAGER_CHAT_ID=${MANAGER_CHAT_ID}
+ADMIN_API_SECRET=${ADMIN_API_SECRET}
 APP_URL=https://${DOMAIN}/
 EOF
 chmod 600 .env
@@ -41,6 +46,7 @@ CORS_ORIGINS=https://${DOMAIN}
 TELEGRAM_BOT_TOKEN=${BOT_TOKEN}
 TELEGRAM_INITDATA_TTL=86400
 TELEGRAM_MANAGER_CHAT_ID=${MANAGER_CHAT_ID}
+ADMIN_API_SECRET=${ADMIN_API_SECRET}
 EOF
 chmod 600 backend/.env.production
 

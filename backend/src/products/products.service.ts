@@ -14,6 +14,7 @@ interface ProductRow {
   image: string;
   gallery: string[];
   specs: unknown;
+  features: unknown;
   category: { slug: string; label: string };
 }
 
@@ -72,6 +73,7 @@ export class ProductsService {
       image: p.image,
       gallery: p.gallery,
       specs: p.specs,
+      features: p.features ?? null,
     };
   }
 }

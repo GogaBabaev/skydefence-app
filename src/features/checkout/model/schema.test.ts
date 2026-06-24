@@ -9,6 +9,7 @@ const valid = {
   inn: '7700000000',
   deliveryAddress: 'Москва, ул. Примерная, 1',
   comment: 'Срочно',
+  consent: true,
 };
 
 describe('checkoutSchema', () => {
@@ -25,12 +26,21 @@ describe('checkoutSchema', () => {
       inn: '',
       deliveryAddress: '',
       comment: '',
+      consent: true,
     });
     expect(result.success).toBe(true);
     if (result.success) {
       expect(result.data.customerEmail).toBeUndefined();
       expect(result.data.inn).toBeUndefined();
     }
+  });
+
+  it('rejects form without consent (152-ФЗ)', () => {
+    const { consent: _omit, ...withoutConsent } = valid;
+    expect(checkoutSchema.safeParse(withoutConsent).success).toBe(false);
+    expect(checkoutSchema.safeParse({ ...valid, consent: false }).success).toBe(
+      false,
+    );
   });
 
   it('rejects bad phone', () => {

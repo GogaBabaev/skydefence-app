@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Phone, ShoppingCart, ChevronDown, Search, Sun, Moon, User } from 'lucide-react';
-import { categories } from '../../entities/product/data/catalog.static';
+import { useCategories } from '../../entities/product/api';
 import { useCart } from '../../features/cart/model/cart.store';
 import { useTheme } from '../../app/App';
 
@@ -17,11 +17,17 @@ const navLinks = [
 export const Navbar = () => {
   const [menuOpen, setMenuOpen]       = useState(false);
   const [catalogOpen, setCatalogOpen] = useState(false);
+
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [menuOpen]);
   const [searchQuery, setSearchQuery] = useState('');
   const { pathname } = useLocation();
   const { totalCount } = useCart();
   const { theme, toggle } = useTheme();
   const navigate = useNavigate();
+  const categories = useCategories();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,7 +38,7 @@ export const Navbar = () => {
   return (
     <>
       {/* ── Top info bar ── */}
-      <div className="bg-olive-900 text-olive-200 text-[11px] hidden md:block">
+      <div className="always-dark bg-olive-900 text-olive-200 text-[11px] hidden md:block">
         <div className="max-w-screen-xl mx-auto px-4 h-8 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <a href="tel:+74951365777" className="flex items-center gap-1 hover:text-white transition-colors">
@@ -82,7 +88,7 @@ export const Navbar = () => {
                   transition={{ duration: 0.15 }}
                   className="absolute top-full left-0 mt-1 w-64 bg-dark-card border border-dark-border rounded-xl shadow-2xl overflow-hidden z-50"
                 >
-                  {categories.map((cat) => (
+                  {categories.filter((cat) => cat.count > 0).map((cat) => (
                     <Link
                       key={cat.slug}
                       to={`/catalog?cat=${cat.slug}`}
@@ -181,10 +187,11 @@ export const Navbar = () => {
       <AnimatePresence>
         {menuOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden fixed top-[56px] left-0 right-0 z-40 bg-dark-card border-b border-dark-border overflow-hidden"
+            initial={{ opacity: 0, x: '100%' }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: '100%' }}
+            transition={{ type: 'tween', duration: 0.22 }}
+            className="md:hidden fixed top-[56px] left-0 right-0 bottom-0 z-40 bg-dark-card overflow-y-auto"
           >
             <div className="px-4 py-3">
               {/* Search */}
@@ -202,7 +209,7 @@ export const Navbar = () => {
               {/* Categories */}
               <div className="mb-3">
                 <div className="text-[10px] text-olive-600 uppercase tracking-wider mb-2 px-1">Каталог</div>
-                {categories.map((cat) => (
+                {categories.filter((cat) => cat.count > 0).map((cat) => (
                   <Link
                     key={cat.slug}
                     to={`/catalog?cat=${cat.slug}`}
