@@ -431,7 +431,7 @@ async function loadAll() {
 async function loadProducts() {
   [products, categories] = await Promise.all([
     apiFetch('/admin/products'),
-    apiFetch('/products/categories'),
+    apiFetch('/categories'),
   ]);
 
   document.getElementById('stat-total').textContent = products.length;

@@ -79,25 +79,3 @@ jobs:
           npm run seed
         env:
           DATABASE_URL: postgresql://test:test@localhost:5432/test
-
-  deploy:
-    name: Deploy to production (VPS)
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    needs: [frontend, backend, migrations]
-    environment: production
-    steps:
-      - uses: actions/checkout@v4
-      - name: Deploy over SSH
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ secrets.DEPLOY_HOST }}
-          username: ${{ secrets.DEPLOY_USER }}
-          key: ${{ secrets.DEPLOY_SSH_KEY }}
-          script: |
-            set -e
-            cd /opt/skydefence
-            git fetch origin main && git reset --hard origin/main
-            docker compose -f docker-compose.prod.yml up -d --build
-            docker compose -f docker-compose.prod.yml exec -T api npx prisma migrate deploy
-            docker system prune -f
