@@ -1,9 +1,10 @@
 import {
   ArrayMaxSize,
   ArrayMinSize,
+  Equals,
   IsArray,
+  IsBoolean,
   IsInt,
-  IsNumber,
   IsOptional,
   IsString,
   Matches,
@@ -17,16 +18,9 @@ import { Type } from 'class-transformer';
 
 class OrderItemDto {
   @IsString()
-  @MaxLength(300)
-  name: string;
-
-  // null = "цена по запросу". Если цена указана — она не может быть
-  // отрицательной (защита от подмены итога в меньшую сторону).
-  @IsOptional()
-  @IsNumber()
-  @Min(0)
-  @Max(1_000_000_000)
-  price: number | null;
+  @MinLength(1)
+  @MaxLength(200)
+  slug: string;
 
   @IsInt()
   @Min(1)
@@ -60,6 +54,10 @@ export class CreateOrderLeadDto {
   @IsString()
   @MaxLength(100)
   source?: string;
+
+  @IsBoolean()
+  @Equals(true, { message: 'Personal data consent is required' })
+  consent: boolean;
 }
 
 export class CreateCallbackLeadDto {
@@ -76,4 +74,8 @@ export class CreateCallbackLeadDto {
   @IsString()
   @MaxLength(2000)
   message?: string;
+
+  @IsBoolean()
+  @Equals(true, { message: 'Personal data consent is required' })
+  consent: boolean;
 }

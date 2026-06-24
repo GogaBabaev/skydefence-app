@@ -2,7 +2,9 @@ import { Type } from 'class-transformer';
 import {
   ArrayMaxSize,
   ArrayMinSize,
+  Equals,
   IsArray,
+  IsBoolean,
   IsEmail,
   IsInt,
   IsOptional,
@@ -67,4 +69,8 @@ export class CreateOrderDto {
   @IsString()
   @MaxLength(1000)
   comment?: string;
+
+  @IsBoolean()
+  @Equals(true, { message: 'Personal data consent is required' })
+  consent: boolean;
 }

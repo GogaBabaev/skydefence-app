@@ -57,9 +57,7 @@ export const Checkout = () => {
         .join('; ')}`
     : '';
 
-  const onSubmit = handleSubmit(async ({ consent: _consent, ...form }) => {
-    // `consent` is a 152-ФЗ frontend gate only — never sent to the backend
-    // (ValidationPipe forbidNonWhitelisted would reject the extra field).
+  const onSubmit = handleSubmit(async (form) => {
     if (submitting || items.length === 0) return;
     setSubmitting(true);
     setServerError(null);

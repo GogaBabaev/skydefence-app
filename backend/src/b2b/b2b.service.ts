@@ -33,6 +33,7 @@ export class B2bService {
         email: dto.email,
         productSlug: dto.productSlug,
         message: dto.message,
+        pdConsentAt: new Date(),
       },
     });
 
@@ -56,6 +57,7 @@ export class B2bService {
         email: dto.email,
         productSlug: dto.productSlug,
         message: dto.message,
+        pdConsentAt: new Date(),
       },
     });
 

@@ -26,6 +26,7 @@ export const Contacts = () => {
           contactName: form.name,
           phone: form.phone,
           message: form.message || 'Запрос из формы контактов',
+          consent: true,
         },
       });
       hapticNotification('success');

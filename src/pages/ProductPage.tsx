@@ -66,6 +66,7 @@ export const ProductPage = () => {
           phone: form.phone,
           productSlug: product.slug,
           message: `Запрос цены на товар: ${product.name}`,
+          consent: true,
         },
       });
       hapticNotification('success');

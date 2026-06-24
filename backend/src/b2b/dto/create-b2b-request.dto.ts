@@ -1,4 +1,6 @@
 import {
+  Equals,
+  IsBoolean,
   IsEmail,
   IsOptional,
   IsString,
@@ -41,4 +43,8 @@ export class CreateB2bRequestDto {
   @MinLength(5)
   @MaxLength(2000)
   message: string;
+
+  @IsBoolean()
+  @Equals(true, { message: 'Personal data consent is required' })
+  consent: boolean;
 }

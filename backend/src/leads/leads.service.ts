@@ -1,8 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { TelegramNotifyService } from '../notifications/telegram-notify.service';
 
-interface OrderItem {
+interface ResolvedOrderItem {
+  productId: number;
   name: string;
   price: number | null;
   qty: number;
@@ -29,11 +31,15 @@ export class LeadsService {
   async order(data: {
     name: string;
     phone: string;
-    items: OrderItem[];
+    items: { slug: string; qty: number }[];
     comment?: string;
     source?: string;
   }): Promise<void> {
-    const total = data.items.reduce((s, i) => s + (i.price ?? 0) * i.qty, 0);
+    const resolved = await this.resolveItems(data.items);
+    const total = resolved.reduce(
+      (s, i) => s + (i.price ?? 0) * i.qty,
+      0,
+    );
 
     const order = await this.prisma.order.create({
       data: {
@@ -43,9 +49,10 @@ export class LeadsService {
         customerName: data.name,
         customerPhone: data.phone,
         comment: data.comment ?? null,
+        pdConsentAt: new Date(),
         items: {
-          create: data.items.map((i) => ({
-            // productId is null — website items are free-text, not DB products
+          create: resolved.map((i) => ({
+            productId: i.productId,
             productName: i.name,
             unitPrice: i.price ?? 0,
             quantity: i.qty,
@@ -54,7 +61,7 @@ export class LeadsService {
       },
     });
 
-    void this.notify.notifyManager(this.formatOrder(data, order.number), {
+    void this.notify.notifyManager(this.formatOrder(data, resolved, order.number), {
       inline_keyboard: [
         [
           { text: '✅ Подтвердить', callback_data: `ord:c:${order.id}` },
@@ -67,7 +74,12 @@ export class LeadsService {
 
   async callback(data: { name: string; phone: string; message?: string }): Promise<void> {
     await this.prisma.leadCallback.create({
-      data: { name: data.name, phone: data.phone, message: data.message ?? null },
+      data: {
+        name: data.name,
+        phone: data.phone,
+        message: data.message ?? null,
+        pdConsentAt: new Date(),
+      },
     });
     void this.notify.notifyManager(this.formatCallback(data));
   }
@@ -79,19 +91,52 @@ export class LeadsService {
     });
   }
 
+  private async resolveItems(
+    items: { slug: string; qty: number }[],
+  ): Promise<ResolvedOrderItem[]> {
+    const slugs = [...new Set(items.map((i) => i.slug))];
+    if (slugs.length !== items.length) {
+      throw new BadRequestException('Duplicate products in order');
+    }
+
+    const products = await this.prisma.product.findMany({
+      where: { slug: { in: slugs }, isActive: true },
+      select: { id: true, slug: true, name: true, price: true, inStock: true },
+    });
+    if (products.length !== slugs.length) {
+      throw new BadRequestException('Some products do not exist');
+    }
+
+    const bySlug = new Map(products.map((p) => [p.slug, p]));
+    return items.map((i) => {
+      const p = bySlug.get(i.slug)!;
+      if (!p.inStock) {
+        throw new BadRequestException(`"${p.name}" is out of stock`);
+      }
+      const price =
+        p.price === null ? null : Number(p.price as Prisma.Decimal);
+      return {
+        productId: p.id,
+        name: p.name,
+        price,
+        qty: i.qty,
+      };
+    });
+  }
+
   private formatOrder(
     data: {
       name: string;
       phone: string;
-      items: OrderItem[];
       comment?: string;
       source?: string;
     },
+    items: ResolvedOrderItem[],
     orderNumber: number,
   ): string {
-    const total = data.items.reduce((s, i) => s + (i.price ?? 0) * i.qty, 0);
-    const hasOnRequest = data.items.some((i) => i.price == null);
-    const itemLines = data.items
+    const total = items.reduce((s, i) => s + (i.price ?? 0) * i.qty, 0);
+    const hasOnRequest = items.some((i) => i.price == null);
+    const itemLines = items
       .map(
         (i) =>
           `  • ${esc(i.name)} × ${i.qty} — ${i.price == null ? 'по запросу' : fmt(i.price * i.qty)}`,

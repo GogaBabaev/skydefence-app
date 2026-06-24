@@ -149,6 +149,7 @@
       <button class="nav-btn active" onclick="switchTab('products')">📦 Товары</button>
       <button class="nav-btn" onclick="switchTab('orders')">🛒 Заказы</button>
       <button class="nav-btn" onclick="switchTab('b2b')">📨 Заявки B2B</button>
+      <button class="nav-btn" onclick="switchTab('callbacks')">📞 Звонки</button>
     </nav>
     <button class="logout-btn" onclick="logout()">Выйти</button>
   </header>
@@ -261,6 +262,32 @@
       </table>
     </div>
   </div>
+
+  <!-- ЗАЯВКИ НА ОБРАТНЫЙ ЗВОНОК -->
+  <div class="page" id="page-callbacks">
+    <div class="stats">
+      <div class="stat"><div class="val" id="cb-stat-total">—</div><div class="lbl">Всего заявок</div></div>
+    </div>
+
+    <div class="toolbar">
+      <button class="btn btn-secondary" onclick="loadCallbacks()">🔄 Обновить</button>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>№</th>
+            <th>Имя</th>
+            <th class="hide-sm">Телефон</th>
+            <th class="hide-sm">Сообщение</th>
+            <th>Дата</th>
+          </tr>
+        </thead>
+        <tbody id="callbacks-body"></tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
 <!-- Modal: Товар -->
@@ -368,7 +395,7 @@
 <script>
 const API_URL = 'https://app.sky-defence.ru/api';
 let secret = '';
-let products = [], categories = [], orders = [], b2bList = [];
+let products = [], categories = [], orders = [], b2bList = [], callbacksList = [];
 let editingGallery = [];
 let editingSpecs = [];
 let currentOrderId = null;
@@ -420,6 +447,7 @@ function switchTab(tab) {
   event.target.classList.add('active');
   if (tab === 'orders') loadOrders();
   if (tab === 'b2b') loadB2b();
+  if (tab === 'callbacks') loadCallbacks();
 }
 
 // ─── Load all ────────────────────────────────────────────────────────────────
@@ -728,6 +756,32 @@ async function updateOrderStatus(status) {
     closeOrderModal();
     await loadOrders();
   } catch (e) { toast('Ошибка: ' + e.message, true); }
+}
+
+// ─── CALLBACKS ───────────────────────────────────────────────────────────────
+async function loadCallbacks() {
+  try {
+    callbacksList = await apiFetch('/admin/callbacks');
+    document.getElementById('cb-stat-total').textContent = callbacksList.length;
+    renderCallbacks();
+  } catch (e) { toast('Ошибка загрузки звонков: ' + e.message, true); }
+}
+
+function renderCallbacks() {
+  const tbody = document.getElementById('callbacks-body');
+  if (!callbacksList.length) {
+    tbody.innerHTML = '<tr><td colspan="5"><div class="empty"><div class="icon">📞</div><p>Заявок нет</p></div></td></tr>';
+    return;
+  }
+  tbody.innerHTML = callbacksList.map(r => `
+    <tr>
+      <td><b>#${r.id}</b></td>
+      <td>${esc(r.name || '—')}</td>
+      <td class="hide-sm"><a href="tel:${esc(r.phone)}" style="color:#6366f1">${esc(r.phone || '—')}</a></td>
+      <td class="hide-sm" style="color:#94a3b8;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(r.message || '—')}</td>
+      <td style="color:#64748b;font-size:13px">${fmtDate(r.createdAt)}</td>
+    </tr>
+  `).join('');
 }
 
 // ─── B2B ─────────────────────────────────────────────────────────────────────

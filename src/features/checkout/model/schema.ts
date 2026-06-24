@@ -34,8 +34,7 @@ export const checkoutSchema = z.object({
     .max(1000)
     .optional()
     .or(z.literal('').transform(() => undefined)),
-  // 152-ФЗ: явное согласие на обработку ПДн. Фронтовый гейт — на бэкенд НЕ
-  // отправляется (там ValidationPipe forbidNonWhitelisted, лишнее поле = 400).
+  // 152-ФЗ: согласие валидируется на фронте и сохраняется в БД на бэкенде.
   consent: z.literal(true, {
     errorMap: () => ({ message: 'Подтвердите согласие на обработку персональных данных' }),
   }),

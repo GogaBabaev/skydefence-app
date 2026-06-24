@@ -50,7 +50,7 @@ export const About = () => (
 
     {/* Stats */}
     <div className="grid grid-cols-3 gap-3 mb-8">
-      {[['500+','клиентов'],['15 лет','на рынке'],['24/7','поддержка']].map(([n,l]) => (
+      {[['500+','клиентов'],['15 лет','на рынке'],['Быстро','ответ менеджера']].map(([n,l]) => (
         <div key={l} className="bg-dark-card border border-dark-border rounded-xl p-4 text-center">
           <div className="text-xl font-black text-olive-500 mb-0.5">{n}</div>
           <div className="text-xs text-olive-600">{l}</div>

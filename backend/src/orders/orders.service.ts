@@ -109,6 +109,7 @@ export class OrdersService {
         inn: dto.inn,
         deliveryAddress: dto.deliveryAddress,
         comment: dto.comment,
+        pdConsentAt: new Date(),
         items: { create: items },
       },
       include: { items: true },

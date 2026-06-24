@@ -16,19 +16,14 @@ export interface Category {
 }
 
 /**
- * Catalog source of truth is the backend (PostgreSQL).
- * The bundled static catalog is used as a fallback so the storefront
- * stays browsable if the API is unreachable; orders/payments always
- * require the backend.
+ * Единый источник каталога — PostgreSQL через API. Сайт и мини-апп читают
+ * одни и те же эндпоинты; изменения в админке видны на обоих каналах.
+ * Статический каталог — только для локальной разработки без backend.
  */
 export async function fetchProducts(category?: string): Promise<Product[]> {
   if (!API_ENABLED) return filterStatic(category);
-  try {
-    const qs = category && category !== 'all' ? `?category=${category}` : '';
-    return await api<Product[]>(`/products${qs}`);
-  } catch {
-    return filterStatic(category);
-  }
+  const qs = category && category !== 'all' ? `?category=${category}` : '';
+  return await api<Product[]>(`/products${qs}`);
 }
 
 export async function fetchProduct(slug: string): Promise<Product | null> {
@@ -44,11 +39,7 @@ export async function fetchProduct(slug: string): Promise<Product | null> {
 
 export async function fetchCategories(): Promise<Category[]> {
   if (!API_ENABLED) return staticCategories;
-  try {
-    return await api<Category[]>(`/categories`);
-  } catch {
-    return staticCategories;
-  }
+  return await api<Category[]>(`/categories`);
 }
 
 function filterStatic(category?: string): Product[] {
@@ -59,39 +50,52 @@ function filterStatic(category?: string): Product[] {
 /* ── React hooks ─────────────────────────────────────────────── */
 
 export function useProducts(category?: string) {
-  const [products, setProducts] = useState<Product[]>(API_ENABLED ? [] : filterStatic(category));
+  const [products, setProducts] = useState<Product[]>(
+    API_ENABLED ? [] : filterStatic(category),
+  );
   const [loading, setLoading] = useState(API_ENABLED);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let active = true;
     setLoading(API_ENABLED);
-    fetchProducts(category).then((data) => {
-      if (active) {
-        setProducts(data);
-        setLoading(false);
-      }
-    });
+    setError(null);
+    fetchProducts(category)
+      .then((data) => {
+        if (active) {
+          setProducts(data);
+          setLoading(false);
+        }
+      })
+      .catch(() => {
+        if (active) {
+          setProducts([]);
+          setLoading(false);
+          setError('Не удалось загрузить каталог');
+        }
+      });
     return () => {
       active = false;
     };
   }, [category]);
 
-  return { products, loading };
+  return { products, loading, error };
 }
 
-/**
- * Live category list with real product counts from the backend. Starts from
- * the bundled static list (instant render / offline fallback) and swaps in
- * live data — including up-to-date `count` — once the API responds.
- */
 export function useCategories() {
-  const [categories, setCategories] = useState<Category[]>(staticCategories);
+  const [categories, setCategories] = useState<Category[]>(
+    API_ENABLED ? [] : staticCategories,
+  );
 
   useEffect(() => {
     let active = true;
-    fetchCategories().then((data) => {
-      if (active && data?.length) setCategories(data);
-    });
+    fetchCategories()
+      .then((data) => {
+        if (active && data?.length) setCategories(data);
+      })
+      .catch(() => {
+        /* пустой список — админ ещё не добавил категории */
+      });
     return () => {
       active = false;
     };

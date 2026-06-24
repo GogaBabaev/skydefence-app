@@ -1,3 +1,7 @@
+/**
+ * DEV ONLY — offline fallback when VITE_API_URL is not set (local dev without backend).
+ * Production mini-app and website always load catalog from PostgreSQL via API.
+ */
 export interface Product {
   id: string;
   slug: string;

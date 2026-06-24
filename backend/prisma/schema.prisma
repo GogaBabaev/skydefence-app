@@ -84,6 +84,8 @@ model Order {
   inn             String?
   deliveryAddress String?     @map("delivery_address")
   comment         String?
+  /// Момент явного согласия на обработку ПДн (152-ФЗ).
+  pdConsentAt     DateTime?   @map("pd_consent_at")
   createdAt       DateTime    @default(now()) @map("created_at")
   updatedAt       DateTime    @updatedAt @map("updated_at")
   items           OrderItem[]
@@ -110,11 +112,12 @@ model OrderItem {
 
 // ── Callback requests (sky-defence.ru "call me back" form) ────────
 model LeadCallback {
-  id        Int      @id @default(autoincrement())
-  name      String
-  phone     String
-  message   String?
-  createdAt DateTime @default(now()) @map("created_at")
+  id          Int       @id @default(autoincrement())
+  name        String
+  phone       String
+  message     String?
+  pdConsentAt DateTime? @map("pd_consent_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
 
   @@map("lead_callbacks")
 }
@@ -138,6 +141,7 @@ model B2bRequest {
   productSlug String?   @map("product_slug")
   message     String
   status      B2bStatus @default(NEW)
+  pdConsentAt DateTime? @map("pd_consent_at")
   createdAt   DateTime  @default(now()) @map("created_at")
 
   @@map("b2b_requests")

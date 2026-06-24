@@ -35,6 +35,7 @@ export const B2B = () => {
           phone: form.phone,
           ...(form.email ? { email: form.email } : {}),
           message,
+          consent: true,
         },
       });
       hapticNotification('success');

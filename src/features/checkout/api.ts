@@ -1,10 +1,6 @@
 import { api } from '../../shared/api/http';
 import type { CheckoutForm } from './model/schema';
 
-/** Checkout payload sent to the backend — the 152-ФЗ `consent` flag is a
- * frontend-only gate and is intentionally excluded. */
-type CheckoutPayload = Omit<CheckoutForm, 'consent'>;
-
 export interface OrderItemDto {
   productId: number;
   productName: string;
@@ -25,7 +21,7 @@ export interface OrderDto {
 /** Creates the order (prices are computed server-side) and notifies the
  * manager in Telegram. Payment is arranged manually afterwards. */
 export function createOrder(
-  form: CheckoutPayload,
+  form: CheckoutForm,
   items: { productId: number; quantity: number }[],
 ): Promise<OrderDto> {
   return api<OrderDto>('/orders', {
@@ -44,7 +40,7 @@ export function getOrder(orderId: string): Promise<OrderDto> {
  * notify the manager with the item list instead of creating an order.
  */
 export function createQuoteRequest(
-  form: CheckoutPayload,
+  form: CheckoutForm,
   items: { name: string; quantity: number }[],
 ): Promise<{ id: number; status: string }> {
   const list = items.map((i) => `• ${i.name} ×${i.quantity}`).join('\n');
@@ -60,6 +56,7 @@ export function createQuoteRequest(
       phone: form.customerPhone,
       email: form.customerEmail?.trim() || undefined,
       message,
+      consent: form.consent,
     },
   });
 }

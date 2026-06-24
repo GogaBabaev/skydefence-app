@@ -62,6 +62,7 @@ describe('OrdersService', () => {
       ],
       customerName: 'Misha',
       customerPhone: '+79990000000',
+      consent: true,
     });
 
     expect(order.totalAmount).toBe(2500.5);
@@ -76,6 +77,7 @@ describe('OrdersService', () => {
         items: [{ productId: 99, quantity: 1 }],
         customerName: 'M',
         customerPhone: '+79990000000',
+        consent: true as const,
       }),
     ).rejects.toThrow('Some products do not exist');
   });
@@ -89,6 +91,7 @@ describe('OrdersService', () => {
         items: [{ productId: 1, quantity: 1 }],
         customerName: 'M',
         customerPhone: '+79990000000',
+        consent: true as const,
       }),
     ).rejects.toThrow('B2B');
   });
@@ -102,6 +105,7 @@ describe('OrdersService', () => {
         items: [{ productId: 1, quantity: 1 }],
         customerName: 'M',
         customerPhone: '+79990000000',
+        consent: true as const,
       }),
     ).rejects.toThrow('out of stock');
   });
